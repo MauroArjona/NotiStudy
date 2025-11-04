@@ -1,22 +1,19 @@
 import { Link } from 'expo-router';
-import { StyleSheet } from 'nativewind';
-import { StatusBar, Text, View } from 'react-native-web';
+import { StatusBar } from 'expo-status-bar';
+import { View, Text } from 'react-native';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-lg text-gray-800 mb-4">
+        ¡Bienvenido a NotiStudy!
+      </Text>
+
+      <Link href="/algo">
+        <Text className="text-blue-600 underline">Ir a ruta de prueba</Text>
+      </Link>
+
       <StatusBar style="auto" />
-      <Link href="/algo"> Enlace a ruta de prueba </Link>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
