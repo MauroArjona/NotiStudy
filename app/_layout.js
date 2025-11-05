@@ -1,11 +1,11 @@
 import { Slot } from "expo-router";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
-export default function Layout(){
+export default function Layout() {
     return (
-        <View classname="flex-1 bg-black items-center justify-center">
-            <Text classname='text-white'>Layout general</Text>
-            <Slot></Slot>
+        // Usamos className (correcto) y flex-1 para que el layout ocupe toda la pantalla
+        <View className="flex-1 bg-black">
+            <Slot />
         </View>
-    )
+    );
 }
