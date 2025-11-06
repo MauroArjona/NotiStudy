@@ -16,6 +16,7 @@
     "expo": "~54.0.22",
     "expo-linking": "~8.0.8",
     "expo-router": "^6.0.14",
+    "expo-sqlite": "~16.0.9",
     "expo-status-bar": "~3.0.8",
     "nativewind": "^2.0.11",
     "react": "19.1.0",
