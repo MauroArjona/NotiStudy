@@ -1,19 +1,27 @@
 import { SafeAreaView, View, Text } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
+import { useRouter } from "expo-router";
 
 // 🔹 Configurar idioma en español
-LocaleConfig.locales['es'] = {
+LocaleConfig.locales["es"] = {
   monthNames: [
-    'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+    "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+    "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
   ],
-  monthNamesShort: ['Ene.','Feb.','Mar.','Abr.','May.','Jun.','Jul.','Ago.','Sept.','Oct.','Nov.','Dic.'],
-  dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
-  dayNamesShort: ['D','L','M','M','J','V','S']
+  monthNamesShort: ["Ene.","Feb.","Mar.","Abr.","May.","Jun.","Jul.","Ago.","Sept.","Oct.","Nov.","Dic."],
+  dayNames: ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],
+  dayNamesShort: ["D","L","M","M","J","V","S"]
 };
-LocaleConfig.defaultLocale = 'es';
+LocaleConfig.defaultLocale = "es";
 
 export default function CalendarScreen() {
+  const router = useRouter();
+
+  const handleDayPress = (day) => {
+    // Navega a la pantalla dinámica con la fecha seleccionada
+    router.push(`/activities/${day.dateString}`);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="p-4">
@@ -22,6 +30,7 @@ export default function CalendarScreen() {
         </Text>
 
         <Calendar
+          onDayPress={handleDayPress}
           theme={{
             selectedDayBackgroundColor: "#0030BF",
             todayTextColor: "#0030BF",
@@ -30,9 +39,9 @@ export default function CalendarScreen() {
             textDayFontWeight: "500",
           }}
           markedDates={{
-            "2025-11-08": { selected: true, selectedColor: "#FACC15" }, // Amarillo
-            "2025-11-09": { selected: true, selectedColor: "#A78BFA" }, // Violeta
-            "2025-11-11": { selected: true, selectedColor: "#22C55E" }, // Verde
+            "2025-11-03": { selected: true, selectedColor: "#FACC15" },
+            "2025-11-05": { selected: true, selectedColor: "#A78BFA" },
+            "2025-11-10": { selected: true, selectedColor: "#22C55E" },
           }}
         />
 
