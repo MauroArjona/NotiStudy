@@ -11,7 +11,6 @@ export default function Layout() {
       <View className="flex-1">
         <Slot />
       </View>
-      <View className="bg-blue-600 h-12 w-full" />
     </SafeAreaView>
   );
 }
