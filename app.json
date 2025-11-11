@@ -19,9 +19,14 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#2563eb"
       },
       "edgeToEdgeEnabled": true
+    },
+    "androidNavigationBar": {
+      "visible": "visible",
+      "backgroundColor": "#2563eb",
+      "barStyle": "light-content"
     },
     "web": {
       "favicon": "./assets/favicon.png"
