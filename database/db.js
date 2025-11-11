@@ -45,8 +45,8 @@ export const initDB = () => {
         );
 
     // Insertar materias iniciales si no existen 
-    const result = db.getFirstSync("SELECT COUNT(*) AS count FROM materias;"); 
-    if (result.count === 0) {
+    const resultMat = db.getFirstSync("SELECT COUNT(*) AS count FROM materias;"); 
+    if (resultMat.count === 0) {
         console.log("Insertando materias iniciales...");
         db.execSync(`
             INSERT INTO materias (nombre, estado) VALUES
@@ -55,6 +55,19 @@ export const initDB = () => {
             ('Inteligencia Artificial', 'Regularizada'),
             ('Ingeniería de Software', 'Regularizada'),
             ('Bases de Datos II', 'Aprobada');
+        `);
+    }
+
+    const resultClases = db.getFirstSync("SELECT COUNT(*) AS count FROM clases;"); 
+    if (resultClases.count === 0) {
+        console.log("Insertando classes iniciales...");
+        db.execSync(`
+            INSERT INTO clases (idMateria, horarioInicio, horarioFin, dia, aula) VALUES
+            ('1', '19:00', '21:00', 'Martes', 'Virtual'),
+            ('2', '14:00', '16:00', 'Martes', 'Lab. Ardenghi'),
+            ('3', '18:00', '20:00', 'Jueves', 'Aula 6 Anexo'),
+            ('4', '15:00', '18:00', 'Lunes', 'Aula 406'),
+            ('1', '17:00', '19:00', 'Viernes', 'Lab. Ardenghi');
         `);
     }
     console.log("Base de datos inicializada correctamente ✅");

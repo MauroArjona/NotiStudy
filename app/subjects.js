@@ -18,7 +18,7 @@ export default function MisMaterias() {
   const cargarMateriasEnCurso = () => {
     try {
       const data = getMaterias('En Curso'); // devuelve directamente un array
-      console.log("Materias en curso:", data);
+      //console.log("Materias en curso:", data);
       setMateriasEnCurso(data);
     } catch (error) {
       console.error("Error cargando materias:", error);
@@ -28,7 +28,7 @@ export default function MisMaterias() {
   const cargarMateriasRegulares = () => {
     try {
       const data = getMaterias('Regularizada'); // devuelve directamente un array
-      console.log("Materias en curso:", data);
+      //console.log("Materias regulares:", data);
       setMateriasRegulares(data);
     } catch (error) {
       console.error("Error cargando materias:", error);
