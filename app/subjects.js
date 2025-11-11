@@ -12,6 +12,7 @@ export default function MisMaterias() {
   
   useEffect(() => {
     cargarMateriasEnCurso();
+    cargarMateriasRegulares();
   }, []);
 
   const cargarMateriasEnCurso = () => {
@@ -23,10 +24,6 @@ export default function MisMaterias() {
       console.error("Error cargando materias:", error);
     }
   };
-  
-  useEffect(() => {
-    cargarMateriasRegulares();
-  }, []);
 
   const cargarMateriasRegulares = () => {
     try {
@@ -41,6 +38,7 @@ export default function MisMaterias() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       {/* 🔹 Encabezado con botón "+" */}
+    <View className="flex-1 px-5">
       <View className="flex-row items-center justify-between px-4 mt-[-18] mb-4">
         <Text className="text-2xl font-bold">Mis materias</Text>
         <TouchableOpacity
@@ -51,46 +49,41 @@ export default function MisMaterias() {
         </TouchableOpacity>
       </View>
 
-      {/* 🔹 Lista de materias */}
-      <View
-        className="flex-1 p-4"
-        contentContainerStyle={{ paddingBottom: 80 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* En curso */}
-        <Text className="text-lg font-semibold mb-2">En curso</Text>
-
-        <FlatList
-        data={materiasEnCurso}
-        keyExtractor={ (item) => item.idMateria.toString()}
-        renderItem={ ({ item }) => (
-          <View>
-            <Card>
-              <View className="flex-row justify-between">
-                <Text className="font-semibold">{item.nombre}</Text>
-                <Text className="text-blue-500">{item.estado}</Text>
+        {/* 🔹 En curso */}
+        <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+          <Text className="text-lg font-semibold mb-3 text-gray-800">
+            En curso
+          </Text>
+          <FlatList
+            data={materiasEnCurso}
+            keyExtractor={(item) => item.idMateria.toString()}
+            renderItem={({ item }) => (
+              <View key={item.idMateria} className="flex-row justify-between items-start border-b border-gray-200 last:border-0 py-2">
+                <Text className="flex-1 font-medium text-gray-900 pr-3" numberOfLines={2} ellipsizeMode="tail">
+                  {item.nombre}</Text>
+                <Text className="text-blue-600 text-sm">Ver más</Text>
               </View>
-            </Card>
-          </View>
-        )}/>
+            )}
+          />
+        </View>
 
-        {/* Regularizadas */}
-        <Text className="text-lg font-semibold mt-6 mb-2">Regularizadas</Text>
-
-        <FlatList
-        data={materiasRegulares}
-        keyExtractor={ (item) => item.idMateria.toString()}
-        renderItem={ ({ item }) => (
-          <View>
-            <Card>
-              <View className="flex-row justify-between">
-                <Text className="font-semibold">{item.nombre}</Text>
-                <Text className="text-green-600">{item.estado}</Text>
+        {/* 🔹 Regularizadas */}
+        <View className="bg-white rounded-2xl p-4 shadow-sm">
+          <Text className="text-lg font-semibold mb-3 text-gray-800">
+            Regularizadas
+          </Text>
+          <FlatList
+            data={materiasRegulares}
+            keyExtractor={(item) => item.idMateria.toString()}
+            renderItem={({ item }) => (
+              <View key={item.idMateria} className="flex-row justify-between items-start border-b border-gray-200 last:border-0 py-2">
+                <Text className="flex-1 font-medium text-gray-900 pr-3" numberOfLines={2} ellipsizeMode="tail">
+                  {item.nombre}</Text>
+                <Text className="text-blue-600 text-sm">Ver más</Text>
               </View>
-            </Card>
-          </View>
-        )}/>
-        
+            )}
+          />
+        </View>
       </View>
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
     </SafeAreaView>
