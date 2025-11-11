@@ -60,7 +60,7 @@ export const initDB = () => {
 
     const resultClases = db.getFirstSync("SELECT COUNT(*) AS count FROM clases;"); 
     if (resultClases.count === 0) {
-        console.log("Insertando classes iniciales...");
+        console.log("Insertando clases iniciales...");
         db.execSync(`
             INSERT INTO clases (idMateria, horarioInicio, horarioFin, dia, aula) VALUES
             ('1', '19:00', '21:00', 'Martes', 'Virtual'),
@@ -70,6 +70,18 @@ export const initDB = () => {
             ('1', '17:00', '19:00', 'Viernes', 'Lab. Ardenghi');
         `);
     }
+
+    const resultAct = db.getFirstSync("SELECT COUNT(*) AS count FROM actividades;"); 
+    if (resultAct.count === 0) {
+        console.log("Insertando actividades iniciales...");
+        db.execSync(`
+            INSERT INTO actividades (idMateria, horario, fecha, aula, descripcionActividad) VALUES
+            ('1', '18:00', '20-11-25', 'Aula 110', '2do Parcial'),
+            ('1', '23:59', '17-11-25', '', 'Entrega TP4'),
+            ('2', '18:00', '17-11-25', 'Lab. Ardenghi', 'Presentación aplicación')
+        `);
+    }
+    
     console.log("Base de datos inicializada correctamente ✅");
   } catch (error) {
     console.error("Error inicializando la base de datos ❌", error);

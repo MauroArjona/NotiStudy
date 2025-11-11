@@ -9,7 +9,6 @@ import { getFechaActual } from "../utils/formatDate";
 
 export default function HomeScreen() {
   const router = useRouter();
-
   const [clasesHoy, setClasesHoy] = useState([]);
     
   useEffect(() => {
@@ -26,73 +25,77 @@ export default function HomeScreen() {
     }
   };
 
+  const data = [
+    { tipo: "clases" },
+   // { tipo: "actividades" },
+    { tipo: "actividades", titulo: "TP4 - TNT", hora: "23:59hs" },
+    { tipo: "actividades", titulo: "Exposición - Cloud Computing", hora: "18:00hs" },
+  ];
+
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
-        <View className="flex-row justify-between mb-2 px-4 mt-[-18] items-end">
+        {/* Encabezado */}
+        <View className="flex-row justify-between mb-6 px-4 mt-[-30] items-end">
           <Text className="text-xl font-semibold">Actividades</Text>
           <Text className="text-gray-500">{getFechaActual()}</Text>
         </View>
 
-        <ScrollView
-          className="flex-1 p-4"
-          contentContainerStyle={{ paddingBottom: 160 }}
+        {/* FlatList principal */}
+        <FlatList
+          data={data}
+          keyExtractor={(_, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          scrollEnabled={false}
-        >
-          {/* 🔹 Mis clases */}
-          <Card title="Mis clases">
-            <View className="border-t border-gray-200 my-2" />
-
-            {/* 🔸 Materia 1 */}
-          
-          <FlatList
-            data={clasesHoy}
-            keyExtractor={(item) => item.idClase.toString()}
-            renderItem={({ item }) => (
-              <View className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3">
-                <TouchableOpacity
-                  className="flex-1"
-                  onPress={() =>
-                    router.push({
-                      pathname: "/detailSubject/[detail]",
-                      params: { detail: "{item.nombre}" },
-                    })
-                  }
-                >
-                  <Text className="font-semibold">{item.nombre}</Text>
-                </TouchableOpacity>
-
-                <View className="items-end">
-                  <Text className="text-gray-700">{item.horarioInicio} - {item.horarioFin}</Text>
-                  <Text className="text-gray-500">{item.aula}</Text>
-                </View>
-              </View>
-            )}
-          />
-
-            
-          </Card>
-
-          {/* 🔹 Entregas próximas */}
-          <Card title="Entrega próxima">
-            <View className="border-t border-gray-200 my-2" />
-            <Text className="font-semibold">TP4 - TNT</Text>
-            <Text className="text-gray-500">23:59hs</Text>
-          </Card>
-
-          <Card title="Entrega próxima">
-            <View className="border-t border-gray-200 my-2" />
-            <Text className="font-semibold">TP5 - Redes</Text>
-            <Text className="text-gray-500">23:59hs</Text>
-          </Card>
-
-          <Card title="Entrega próxima">
-            <View className="border-t border-gray-200 my-2" />
-            <Text className="font-semibold">Exposición - Cloud Computing</Text>
-            <Text className="text-gray-500">18:00hs</Text>
-          </Card>
-        </ScrollView>
+          contentContainerStyle={{ paddingBottom: 160, paddingHorizontal: 16 }}
+          renderItem={({ item }) => {
+            if (item.tipo === "clases") {
+              return (
+                <Card title="Mis clases">
+                  <View className="border-t border-gray-200 my-2" />
+                  {clasesHoy.length > 0 ? (
+                    clasesHoy.map((c) => (
+                      <View
+                        key={c.idClase}
+                        className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3"
+                      >
+                        <TouchableOpacity
+                          className="flex-1"
+                          onPress={() =>
+                            router.push({
+                              pathname: "/detailSubject/[detail]",
+                              params: { detail: c.nombre },
+                            })
+                          }
+                        >
+                          <Text className="font-semibold">{c.nombre}</Text>
+                        </TouchableOpacity>
+                        <View className="items-end">
+                          <Text className="text-gray-700">
+                            {c.horarioInicio} - {c.horarioFin}
+                          </Text>
+                          <Text className="text-gray-500">{c.aula}</Text>
+                        </View>
+                      </View>
+                    ))
+                  ) : (
+                    <Text className="text-gray-500 text-center py-3">
+                      No hay clases hoy
+                    </Text>
+                  )}
+                </Card>
+              );
+            } else if (item.tipo === "actividades") {
+              return (
+                <Card title="Actividades Pendientes">
+                  <View className="border-t border-gray-200 my-2" />
+                  <Text className="font-semibold">{item.titulo}</Text>
+                  <Text className="text-gray-500">{item.hora}</Text>
+                </Card>
+              );
+            }
+            return null;
+          }}
+        />
       </View>
 
       {/* Barra inferior */}

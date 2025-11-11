@@ -42,7 +42,7 @@ export default function MisMaterias() {
     <SafeAreaView className="flex-1 bg-gray-100">
       {/* 🔹 Encabezado con botón "+" */}
     <View className="flex-1 px-5">
-      <View className="flex-row items-center justify-between px-4 mt-[-18] mb-4">
+      <View className="flex-row items-center justify-between px-4 mt-[-30] mb-4">
         <Text className="text-2xl font-bold">Mis materias</Text>
         <TouchableOpacity className="bg-blue-600 p-2 rounded-full" onPress={() => router.push("/addSubject")}>
           <Ionicons name="add" size={24} color="white" />

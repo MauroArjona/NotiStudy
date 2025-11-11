@@ -7,7 +7,7 @@ export default function BottomNav() {
 
   const tabs = [
     {
-      label: "Calendario\nde\nactividades",
+      label: "Calendario",
       icon: "calendar",
       href: "/calendar",
     },
