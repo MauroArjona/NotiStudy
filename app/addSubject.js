@@ -4,6 +4,7 @@ import { Picker } from "@react-native-picker/picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
+import { agregarMateria } from '../database/materias.js';
 
 const styles = StyleSheet.create({
   coloresContainer: {
@@ -49,10 +50,16 @@ export default function AgregarMateria() {
     setShowPicker(true);
   };
 
+  const formatTime = (date) => {
+    const horas = String(date.getHours()).padStart(2, "0");
+    const minutos = String(date.getMinutes()).padStart(2, "0");
+    return `${horas}:${minutos}`;
+  } ;
+
   const onTimeChange = (event, selectedDate) => {
     setShowPicker(Platform.OS === "ios"); // en Android se cierra automáticamente
     if (selectedDate) {
-      const horaFormatted = selectedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const horaFormatted = formatTime(selectedDate);
       
       if (pickerField === "horaInicio") {
         setNuevoHorario({ ...nuevoHorario, horaInicio: horaFormatted, horaFin: null });
@@ -92,6 +99,14 @@ export default function AgregarMateria() {
       alert("Por favor ingresá el nombre de la materia");
       return;
     }
+
+    const idMateria = agregarMateria(nombre, estado);
+
+    if (!idMateria) {
+      alert("Ocurrió un error al guardar la materia");
+      return;
+    }
+
     console.log("Materia guardada:", { nombre, estado, horarios, comentario, color: colorSeleccionado});
     router.back(); // vuelve al listado de materias
   };
