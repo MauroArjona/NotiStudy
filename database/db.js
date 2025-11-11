@@ -77,7 +77,7 @@ export const initDB = () => {
         db.execSync(`
             INSERT INTO actividades (idMateria, horario, fecha, aula, descripcionActividad) VALUES
             ('1', '18:00', '20-11-25', 'Aula 110', '2do Parcial'),
-            ('1', '23:59', '17-11-25', '', 'Entrega TP4'),
+            ('1', '23:59', '11-11-25', '', 'Entrega TP4'),
             ('2', '18:00', '17-11-25', 'Lab. Ardenghi', 'Presentación aplicación')
         `);
     }
