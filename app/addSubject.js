@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { SafeAreaView } from "react-native-safe-area-context";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 
 const styles = StyleSheet.create({
@@ -38,6 +39,35 @@ export default function AgregarMateria() {
     horaInicio: "",
     horaFin: "",
   });
+  
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerField, setPickerField] = useState("horaInicio");
+
+  // Picker para hora inicio o fin
+  const openTimePicker = (field) => {
+    setPickerField(field);
+    setShowPicker(true);
+  };
+
+  const onTimeChange = (event, selectedDate) => {
+    setShowPicker(Platform.OS === "ios"); // en Android se cierra automáticamente
+    if (selectedDate) {
+      const horaFormatted = selectedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      
+      if (pickerField === "horaInicio") {
+        setNuevoHorario({ ...nuevoHorario, horaInicio: horaFormatted, horaFin: null });
+      } else {
+        // Solo permitir horaFin > horaInicio
+        const [hiH, hiM] = nuevoHorario.horaInicio.split(":").map(Number);
+        const [hfH, hfM] = horaFormatted.split(":").map(Number);
+        if (hfH < hiH || (hfH === hiH && hfM <= hiM)) {
+          alert("La hora de fin debe ser posterior a la hora de inicio");
+          return;
+        }
+        setNuevoHorario({ ...nuevoHorario, horaFin: horaFormatted });
+      }
+    } 
+  };
 
   const agregarHorario = () => {
     if (nuevoHorario.horaInicio && nuevoHorario.horaFin) {
@@ -52,6 +82,8 @@ export default function AgregarMateria() {
         });
       setHorarios(horariosActualizados);
       setNuevoHorario({ dia: "Lunes", horaInicio: "", horaFin: "" });
+    } else {
+      alert("Seleccioná hora de inicio y fin");
     }
   };
 
@@ -78,7 +110,7 @@ export default function AgregarMateria() {
           onChangeText={setNombre}
         />
 
-        {/* Selector de color */}
+        {/*Selector de color*/}
         <Text className="font-semibold mb-2">Color de la materia</Text>
         <View style={styles.coloresContainer}>
           {coloresDisponibles.map((color) => (
@@ -124,18 +156,20 @@ export default function AgregarMateria() {
             </Picker>
           </View>
 
-          <TextInput
+          {/* Botones para seleccionar horas */}
+          <TouchableOpacity
             className="border border-gray-300 rounded-lg p-2 mb-2"
-            placeholder="Hora inicio (ej: 08:00)"
-            value={nuevoHorario.horaInicio}
-            onChangeText={(t) => setNuevoHorario({ ...nuevoHorario, horaInicio: t })}
-          />
-          <TextInput
+            onPress={() => openTimePicker("horaInicio")}
+          >
+            <Text>{nuevoHorario.horaInicio || "Hora inicio"}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             className="border border-gray-300 rounded-lg p-2 mb-2"
-            placeholder="Hora fin (ej: 10:00)"
-            value={nuevoHorario.horaFin}
-            onChangeText={(t) => setNuevoHorario({ ...nuevoHorario, horaFin: t })}
-          />
+            onPress={() => openTimePicker("horaFin")}
+          >
+            <Text>{nuevoHorario.horaFin || "Hora fin"}</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             className="bg-blue-600 rounded-lg py-2 items-center mt-1"
@@ -203,6 +237,18 @@ export default function AgregarMateria() {
             <Text className="text-white font-semibold">Guardar</Text>
           </TouchableOpacity>
         </View>
+
+         {/* DateTimePicker */}
+        {showPicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="time"
+            is24Hour={true}
+            display="default"
+            onChange={onTimeChange}
+          />
+        )}
+
       </ScrollView>
     </SafeAreaView>
   );
