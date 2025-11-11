@@ -36,9 +36,9 @@ export default function HomeScreen() {
      <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
         {/* Encabezado */}
-        <View className="flex-row justify-between mb-6 px-4 mt-[-30] items-end">
-          <Text className="text-xl font-semibold">Actividades</Text>
-          <Text className="text-gray-500">{getFechaActual()}</Text>
+        <View className="flex-row items-center justify-between mb-5 px-4 mt-[-15] items-end">
+          <Text className="text-2xl font-bold leading-6">Actividades</Text>
+          <Text className="text-gray-500 leading-6">{getFechaActual()}</Text>
         </View>
 
         {/* FlatList principal */}
@@ -58,17 +58,9 @@ export default function HomeScreen() {
                         key={c.idClase}
                         className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3"
                       >
-                        <TouchableOpacity
-                          className="flex-1"
-                          onPress={() =>
-                            router.push({
-                              pathname: "/detailSubject/[detail]",
-                              params: { detail: c.nombre },
-                            })
-                          }
-                        >
+                        <View className="flex-1">
                           <Text className="font-semibold">{c.nombre}</Text>
-                        </TouchableOpacity>
+                        </View>
                         <View className="items-end">
                           <Text className="text-gray-700">
                             {c.horarioInicio} - {c.horarioFin}
