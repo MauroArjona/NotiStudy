@@ -3,21 +3,36 @@ import { View, Text, ScrollView, TouchableOpacity, FlatList } from "react-native
 import { Ionicons } from "@expo/vector-icons";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
-import { getMateriasEnCurso } from "../database/materias"; 
+import { getMaterias } from "../database/materias"; 
 
 export default function MisMaterias() {
-  const [materias, setMaterias] = useState([]);
+  // Obtiene los datos de la BD
+  const [materiasEnCurso, setMateriasEnCurso] = useState([]);
+  const [materiasRegulares, setMateriasRegulares] = useState([]);
   
   useEffect(() => {
-    cargarMaterias();
+    cargarMateriasEnCurso();
   }, []);
 
-  // Obtiene los datos de la BD
-  const cargarMaterias = () => {
+  const cargarMateriasEnCurso = () => {
     try {
-      const data = getMateriasEnCurso(); // devuelve directamente un array
+      const data = getMaterias('En Curso'); // devuelve directamente un array
       console.log("Materias en curso:", data);
-      setMaterias(data);
+      setMateriasEnCurso(data);
+    } catch (error) {
+      console.error("Error cargando materias:", error);
+    }
+  };
+  
+  useEffect(() => {
+    cargarMateriasRegulares();
+  }, []);
+
+  const cargarMateriasRegulares = () => {
+    try {
+      const data = getMaterias('Regularizada'); // devuelve directamente un array
+      console.log("Materias en curso:", data);
+      setMateriasRegulares(data);
     } catch (error) {
       console.error("Error cargando materias:", error);
     }
@@ -46,7 +61,7 @@ export default function MisMaterias() {
         <Text className="text-lg font-semibold mb-2">En curso</Text>
 
         <FlatList
-        data={materias}
+        data={materiasEnCurso}
         keyExtractor={ (item) => item.idMateria.toString()}
         renderItem={ ({ item }) => (
           <View>
@@ -57,31 +72,25 @@ export default function MisMaterias() {
               </View>
             </Card>
           </View>
-        )}
-        />
+        )}/>
 
         {/* Regularizadas */}
         <Text className="text-lg font-semibold mt-6 mb-2">Regularizadas</Text>
-        <Card>
-          <View className="flex-row justify-between">
-            <Text className="font-semibold">Inteligencia Artificial</Text>
-            <Text className="text-green-600">Regularizada</Text>
-          </View>
-        </Card>
 
-        <Card>
-          <View className="flex-row justify-between">
-            <Text className="font-semibold">Ingeniería de Software</Text>
-            <Text className="text-green-600">Regularizada</Text>
+        <FlatList
+        data={materiasRegulares}
+        keyExtractor={ (item) => item.idMateria.toString()}
+        renderItem={ ({ item }) => (
+          <View>
+            <Card>
+              <View className="flex-row justify-between">
+                <Text className="font-semibold">{item.nombre}</Text>
+                <Text className="text-green-600">{item.estado}</Text>
+              </View>
+            </Card>
           </View>
-        </Card>
-
-        <Card>
-          <View className="flex-row justify-between">
-            <Text className="font-semibold">Complementos Matemáticos</Text>
-            <Text className="text-green-600">Regularizada</Text>
-          </View>
-        </Card>
+        )}/>
+        
       </View>
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
     </SafeAreaView>

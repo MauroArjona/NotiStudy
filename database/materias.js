@@ -1,9 +1,9 @@
 import db from './db';
 
-export const getMateriasEnCurso = () => {
+export const getMaterias = (estado) => {
   try {
     const materias = db.getAllSync(
-      'SELECT * FROM materias WHERE estado = ?;', ['En Curso'] 
+      'SELECT * FROM materias WHERE estado = ?;', [estado] 
     );
     console.log("Materias en curso obtenidas ✅");
     return materias; // devuelve un array de objetos
