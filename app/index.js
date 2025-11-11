@@ -1,74 +1,77 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import Card from "../components/Card";
 import BottomNav from "../components/BottomNav";
+import { getClasesHoy } from "../database/clases"; 
+import { useEffect, useState } from "react";
+import { getFechaActual } from "../utils/formatDate";
 
 export default function HomeScreen() {
   const router = useRouter();
 
+  const [clasesHoy, setClasesHoy] = useState([]);
+    
+  useEffect(() => {
+    cargarClasesHoy();
+  }, []);
+  
+  const cargarClasesHoy = () => {
+    try {
+      const data = getClasesHoy(); // devuelve directamente un array
+      console.log("Clases hoy:", data);
+      setClasesHoy(data);
+    } catch (error) {
+      console.error("Error cargando clases del día:", error);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
-        <View className="flex-row justify-between mb-2 px-4 mt-[-18]">
+        <View className="flex-row justify-between mb-2 px-4 mt-[-18] items-end">
           <Text className="text-xl font-semibold">Actividades</Text>
-          <Text className="text-gray-500">Viernes 31 de Octubre</Text>
+          <Text className="text-gray-500">{getFechaActual()}</Text>
         </View>
 
         <ScrollView
           className="flex-1 p-4"
           contentContainerStyle={{ paddingBottom: 160 }}
           showsVerticalScrollIndicator={false}
+          scrollEnabled={false}
         >
           {/* 🔹 Mis clases */}
           <Card title="Mis clases">
             <View className="border-t border-gray-200 my-2" />
 
             {/* 🔸 Materia 1 */}
-            <View className="flex-row justify-between items-start mb-2">
-              <TouchableOpacity
-                className="flex-1"
-                onPress={() =>
-                  router.push({
-                    pathname: "/detailSubject/[detail]",
-                    params: { detail: "Sistemas embebidos y de tiempo real" },
-                  })
-                }
-              >
-                <Text className="font-semibold">
-                  Sistemas embebidos {"\n"}y de tiempo real
-                </Text>
-              </TouchableOpacity>
+          
+          <FlatList
+            data={clasesHoy}
+            keyExtractor={(item) => item.idClase.toString()}
+            renderItem={({ item }) => (
+              <View className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3">
+                <TouchableOpacity
+                  className="flex-1"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/detailSubject/[detail]",
+                      params: { detail: "{item.nombre}" },
+                    })
+                  }
+                >
+                  <Text className="font-semibold">{item.nombre}</Text>
+                </TouchableOpacity>
 
-              <View className="items-end">
-                <Text className="text-gray-700">16:00 - 18:00</Text>
-                <Text className="text-gray-500">Lab. Ardenghi</Text>
+                <View className="items-end">
+                  <Text className="text-gray-700">{item.horarioInicio} - {item.horarioFin}</Text>
+                  <Text className="text-gray-500">{item.aula}</Text>
+                </View>
               </View>
-            </View>
+            )}
+          />
 
-            <View className="border-t border-gray-100 my-1" />
-
-            {/* 🔸 Materia 2 */}
-            <View className="flex-row justify-between items-start mt-2">
-              <TouchableOpacity
-                className="flex-1"
-                onPress={() =>
-                  router.push({
-                    pathname: "/detailSubject/[detail]",
-                    params: { detail: "Desarrollo de aplicaciones móviles" },
-                  })
-                }
-              >
-                <Text className="font-semibold">
-                  Desarrollo de aplicaciones móviles
-                </Text>
-              </TouchableOpacity>
-
-              <View className="items-end">
-                <Text className="text-gray-700">18:00 - 20:00</Text>
-                <Text className="text-gray-500">Lab. Ardenghi</Text>
-              </View>
-            </View>
+            
           </Card>
 
           {/* 🔹 Entregas próximas */}
