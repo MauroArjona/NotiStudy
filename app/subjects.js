@@ -3,12 +3,15 @@ import { View, Text, ScrollView, TouchableOpacity, FlatList } from "react-native
 import { Ionicons } from "@expo/vector-icons";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import { getMaterias } from "../database/materias"; 
 
 export default function MisMaterias() {
   // Obtiene los datos de la BD
   const [materiasEnCurso, setMateriasEnCurso] = useState([]);
   const [materiasRegulares, setMateriasRegulares] = useState([]);
+
+  const router = useRouter();
   
   useEffect(() => {
     cargarMateriasEnCurso();
@@ -41,10 +44,7 @@ export default function MisMaterias() {
     <View className="flex-1 px-5">
       <View className="flex-row items-center justify-between px-4 mt-[-18] mb-4">
         <Text className="text-2xl font-bold">Mis materias</Text>
-        <TouchableOpacity
-          className="bg-blue-600 p-2 rounded-full"
-          onPress={() => console.log("Agregar materia")}
-        >
+        <TouchableOpacity className="bg-blue-600 p-2 rounded-full" onPress={() => router.push("/addSubject")}>
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
       </View>
