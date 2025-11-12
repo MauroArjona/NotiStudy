@@ -4,11 +4,15 @@ const db = SQLite.openDatabaseSync('miuni.db');
 
 export const initDB = () => {
     try {
+        //try { db.runSync("DROP TABLE IF EXISTS clases;"); } catch {}
+        //try { db.runSync("DROP TABLE IF EXISTS materias;"); } catch {}
         db.runSync(
             `CREATE TABLE IF NOT EXISTS materias (
                 idMateria INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                estado TEXT NOT NULL
+                estado TEXT NOT NULL,
+                color TEXT NOT NULL, 
+                comentario TEXT
             );`
         );
         db.runSync(
@@ -17,8 +21,9 @@ export const initDB = () => {
                 idMateria INTEGER,
                 horarioInicio TEXT NOT NULL,
                 horarioFin TEXT NOT NULL,
-                dia TEXT,
+                dia TEXT NOT NULL,
                 aula TEXT NOT NULL,
+                tipo TEXT NOT NULL,
                 FOREIGN KEY (idMateria) REFERENCES materias(idMateria)
             );`
         );
@@ -47,27 +52,27 @@ export const initDB = () => {
     // Insertar materias iniciales si no existen 
     const resultMat = db.getFirstSync("SELECT COUNT(*) AS count FROM materias;"); 
     if (resultMat.count === 0) {
-        console.log("Insertando materias iniciales...");
-        db.execSync(`
-            INSERT INTO materias (nombre, estado) VALUES
-            ('Sistemas Embebidos y de Tiempo Real', 'En Curso'),
-            ('Desarrollo de Aplicaciones Móviles', 'En Curso'),
-            ('Inteligencia Artificial', 'Regularizada'),
-            ('Ingeniería de Software', 'Regularizada'),
-            ('Bases de Datos II', 'Aprobada');
-        `);
+      console.log("Insertando materias iniciales...");
+      db.execSync(`
+        INSERT INTO materias (nombre, estado, color) VALUES
+        ('Sistemas Embebidos y de Tiempo Real', 'En Curso', '#FF6B6B'),
+        ('Desarrollo de Aplicaciones Móviles', 'En Curso', '#4ECDC4'),
+        ('Inteligencia Artificial', 'Regularizada', '#FFD93D'),
+        ('Ingeniería de Software', 'Regularizada', '#1A535C'),
+        ('Bases de Datos II', 'Aprobada', '#FF9F1C');
+      `);
     }
 
     const resultClases = db.getFirstSync("SELECT COUNT(*) AS count FROM clases;"); 
     if (resultClases.count === 0) {
         console.log("Insertando clases iniciales...");
         db.execSync(`
-            INSERT INTO clases (idMateria, horarioInicio, horarioFin, dia, aula) VALUES
-            ('1', '19:00', '21:00', 'Martes', 'Virtual'),
-            ('2', '14:00', '16:00', 'Martes', 'Lab. Ardenghi'),
-            ('3', '18:00', '20:00', 'Jueves', 'Aula 6 Anexo'),
-            ('4', '15:00', '18:00', 'Lunes', 'Aula 406'),
-            ('1', '17:00', '19:00', 'Viernes', 'Lab. Ardenghi');
+            INSERT INTO clases (idMateria, horarioInicio, horarioFin, dia, aula, tipo) VALUES
+            ('1', '19:00', '21:00', 'Martes', 'Virtual', 'Teoría'),
+            ('2', '14:00', '16:00', 'Martes', 'Lab. Ardenghi', 'Práctica'),
+            ('3', '18:00', '20:00', 'Jueves', 'Aula 6 Anexo', 'Teoría'),
+            ('4', '15:00', '18:00', 'Lunes', 'Aula 406', 'Práctica'),
+            ('1', '17:00', '19:00', 'Viernes', 'Lab. Ardenghi', 'Práctica');
         `);
     }
 

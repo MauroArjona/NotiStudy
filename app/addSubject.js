@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { agregarMateria } from '../database/materias.js';
+import { getMaterias } from "../database/materias.js";
+import { agregarClase } from "../database/clases.js";
 
 const styles = StyleSheet.create({
   coloresContainer: {
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
 export default function AgregarMateria() {
   const router = useRouter();
   const [nombre, setNombre] = useState("");
-  const [estado, setEstado] = useState("en_curso");
+  const [estado, setEstado] = useState("En Curso");
   const [comentario, setComentario] = useState("");
   const [horarios, setHorarios] = useState([]);
   const [colorSeleccionado, setColorSeleccionado] = useState("#E57373");
@@ -38,6 +40,8 @@ export default function AgregarMateria() {
     dia: "Lunes",
     horaInicio: "",
     horaFin: "",
+    aula: "",
+    tipo: "Teoría", // valor por defecto
   });
   
   const [showPicker, setShowPicker] = useState(false);
@@ -76,21 +80,32 @@ export default function AgregarMateria() {
   };
 
   const agregarHorario = () => {
-    if (nuevoHorario.horaInicio && nuevoHorario.horaFin) {
-        const horarioNuevo = { ...nuevoHorario };
-        const horariosActualizados = [...horarios, horarioNuevo];
-        const diasOrden = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
-        horariosActualizados.sort((a, b) => {
-            const diaA = diasOrden.indexOf(a.dia);
-            const diaB = diasOrden.indexOf(b.dia);
-            if (diaA !== diaB) return diaA - diaB;
-            return a.horaInicio.localeCompare(b.horaInicio); // compara strings "HH:MM"
-        });
-      setHorarios(horariosActualizados);
-      setNuevoHorario({ dia: "Lunes", horaInicio: "", horaFin: "" });
-    } else {
+    if (!nuevoHorario.horaInicio || !nuevoHorario.horaFin) {
       alert("Seleccioná hora de inicio y fin");
+      return;
     }
+
+    if (!nuevoHorario.aula || nuevoHorario.aula.trim() === "") {
+      alert("Por favor ingresá la ubicación (Aula/Lab.)");
+      return;
+    }
+
+    const horarioNuevo = { ...nuevoHorario };
+    const horariosActualizados = [...horarios, horarioNuevo];
+
+    // Ordenar por día y hora
+    const diasOrden = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+    horariosActualizados.sort((a, b) => {
+      const diaA = diasOrden.indexOf(a.dia);
+      const diaB = diasOrden.indexOf(b.dia);
+      if (diaA !== diaB) return diaA - diaB;
+      return a.horaInicio.localeCompare(b.horaInicio);
+    });
+
+    setHorarios(horariosActualizados);
+
+    // Reiniciar campos del form
+    setNuevoHorario({ dia: "Lunes", horaInicio: "", horaFin: "", aula: "", tipo: "Teoría" });
   };
 
   const guardarMateria = () => {
@@ -99,16 +114,25 @@ export default function AgregarMateria() {
       return;
     }
 
-    const idMateria = agregarMateria(nombre, estado);
+    const idMateria = agregarMateria(nombre, estado, colorSeleccionado, comentario);
 
     if (!idMateria) {
       alert("Ocurrió un error al guardar la materia");
       return;
     }
 
-    console.log("Materia guardada:", { nombre, estado, horarios, comentario, color: colorSeleccionado});
+    // Guardar cada horario en la tabla clases
+    horarios.forEach((h) => {
+      agregarClase(idMateria, h.horaInicio, h.horaFin, h.dia, h.aula, h.tipo);
+    });
+
+    console.log("Materia guardada:", { nombre, estado, horarios, comentario, color: colorSeleccionado });
+    const materiasActuales = getMaterias(estado);
+    console.log("Materias", estado, "después de guardar: ", materiasActuales);
+
     router.back(); // vuelve al listado de materias
   };
+
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
@@ -149,9 +173,9 @@ export default function AgregarMateria() {
         <Text className="font-semibold mb-1">Estado</Text>
         <View className="bg-white border border-gray-300 rounded-lg mb-4 justify-center max-h-10">
           <Picker selectedValue={estado} onValueChange={setEstado}>
-            <Picker.Item label="En curso" value="en_curso" />
-            <Picker.Item label="Regularizada" value="regularizada" />
-            <Picker.Item label="Aprobada" value="aprobada" />
+            <Picker.Item label="En curso" value="En Curso" />
+            <Picker.Item label="Regularizada" value="Regularizada" />
+            <Picker.Item label="Aprobada" value="Aprobada" />
           </Picker>
         </View>
 
@@ -186,6 +210,27 @@ export default function AgregarMateria() {
             <Text>{nuevoHorario.horaFin || "Hora de fin"}</Text>
           </TouchableOpacity>
 
+          {/* Tipo de clase */}
+          <Text className="font-semibold mb-1">Tipo de clase</Text>
+          <View className="border border-gray-300 rounded-lg mb-2 max-h-10 justify-center">
+            <Picker
+              selectedValue={nuevoHorario.tipo}
+              onValueChange={(v) => setNuevoHorario({ ...nuevoHorario, tipo: v })}
+            >
+              <Picker.Item label="Teoría" value="Teoría" />
+              <Picker.Item label="Práctica" value="Práctica" />
+            </Picker>
+          </View>
+
+          {/* Campo de ubicación */}
+          <Text className="font-semibold mb-1">Ubicación</Text>
+          <TextInput
+            className="border border-gray-300 rounded-lg p-2 mb-2 h-10"
+            placeholder="Ej.: Lab. Ardenghi, Aula 110, Virtual"
+            value={nuevoHorario.aula}
+            onChangeText={(text) => setNuevoHorario({ ...nuevoHorario, aula: text })}
+          />
+
           <TouchableOpacity
             className="bg-blue-600 rounded-lg py-2 items-center mt-1"
             onPress={agregarHorario}
@@ -194,44 +239,57 @@ export default function AgregarMateria() {
           </TouchableOpacity>
         </View>
 
-        {/* Horarios agregados por el usuario al completar*/}
+        {/* Horarios agregados por el usuario al completar */}
         {horarios.length > 0 && (
-        <View style={{ marginTop: 12, marginBottom: 16 }}>
-            <Text style={{ fontWeight: "600", marginBottom: 4 }}>Horarios agregados</Text>
+          <View style={{ marginTop: 12, marginBottom: 16 }}>
+            <Text style={{ fontWeight: "600", marginBottom: 8, textAlign: "center" }}>Horarios agregados</Text>
             {horarios.map((h, index) => (
-            <View
+              <View
                 key={index}
                 style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 8,
-                marginBottom: 4,
-                backgroundColor: "#f3f4f6",
-                borderRadius: 6,
-                alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  marginBottom: 6,
+                  backgroundColor: "#f3f4f6",
+                  borderRadius: 6,
+                  alignItems: "center",
                 }}
-            >
-                <Text style={{ flex: 1 }}>{h.dia}</Text>
-                <Text style={{ flex: 1, textAlign: "center" }}>
-                {h.horaInicio} - {h.horaFin}
+              >
+                {/*Día*/}
+               <Text style={{flex: 2, textAlign: "center", minWidth: 10, fontWeight: "500"}}>{h.dia}</Text>
+
+                {/*Horario*/}
+                <Text style={{ flex: 2, textAlign: "center" }}>
+                  {h.horaInicio} - {h.horaFin}
                 </Text>
+
+                {/*Tipo de clase y Ubicación (apilados y centrados)*/}
+                <View style={{ flex: 3, alignItems: "center" }}>
+                  <Text style={{ textAlign: "center", flexWrap: "wrap" }}>{h.tipo}</Text>
+                  <Text style={{ textAlign: "center", flexWrap: "wrap" }}>{h.aula}</Text>
+                </View>
+
+                {/*Botón eliminar*/}
                 <TouchableOpacity onPress={() => {
-                const horariosFiltrados = horarios.filter((_, i) => i !== index);
-                setHorarios(horariosFiltrados);
+                  const horariosFiltrados = horarios.filter((_, i) => i !== index);
+                  setHorarios(horariosFiltrados);
                 }}>
-                <Text style={{ color: "red" }}>Eliminar</Text>
+                  <Text style={{ color: "red", fontWeight: "600" }}>Eliminar</Text>
                 </TouchableOpacity>
-            </View>
+              </View>
             ))}
-        </View>
+          </View>
         )}
+
 
 
         {/*Comentario*/}
         <Text className="font-semibold mb-1">Comentario (opcional)</Text>
         <TextInput
           className="bg-white border border-gray-300 rounded-lg p-2 mb-6 h-10"
-          placeholder="Ej: Parciales los viernes"
+          placeholder="Ej.: Parciales los viernes"
           value={comentario}
           onChangeText={setComentario}
           multiline

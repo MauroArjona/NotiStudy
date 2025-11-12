@@ -1,7 +1,7 @@
 import db from './db';
 
 export const getClasesHoy = () => {
-  const dias = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
+  const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
   const hoy = dias[new Date().getDay()];
   try {
     const clases = db.getAllSync(
@@ -20,13 +20,14 @@ export const getClasesHoy = () => {
   }
 };
 
-export const agregarClase = (idMateria, horarioInicio, horarioFin, dia, aula) => {
+export const agregarClase = (idMateria, horarioInicio, horarioFin, dia, aula, tipo) => {
   try {
     const result = db.runSync(
-      'INSERT INTO materias (idMateria, horarioInicio, horarioFin, dia, aula) VALUES (?, ?, ?, ?, ?);', 
-        [idMateria, horarioInicio, horarioFin, dia, aula]
+      `INSERT INTO clases (idMateria, horarioInicio, horarioFin, dia, aula, tipo)
+       VALUES (?, ?, ?, ?, ?, ?);`,
+      [idMateria, horarioInicio, horarioFin, dia, aula, tipo]
     );
-    // result.lastInsertRowId contiene el ID del nuevo registro
+
     return result.lastInsertRowId;
   } catch (error) {
     console.error("Error al agregar clase:", error);

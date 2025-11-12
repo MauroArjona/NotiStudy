@@ -13,12 +13,12 @@ export const getMaterias = (estado) => {
   }
 };
 
-export const agregarMateria = (nombre, estado) => {
+export const agregarMateria = (nombre, estado, color, comentario) => {
   try {
     const result = db.runSync(
-      'INSERT INTO materias (nombre, estado) VALUES (?, ?);', [nombre, estado]
+      'INSERT INTO materias (nombre, estado, color, comentario) VALUES (?, ?, ?, ?);', 
+      [nombre, estado, color, comentario]
     );
-    // result.lastInsertRowId contiene el ID del nuevo registro
     return result.lastInsertRowId;
   } catch (error) {
     console.error("Error al agregar materia:", error);
