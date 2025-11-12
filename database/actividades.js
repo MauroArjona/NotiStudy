@@ -40,7 +40,7 @@ export const getActividadesHoy = () => {
 export const agregarActividad = (idMateria, horario, fecha, aula, descripcionActividad) => {
   try {
     const result = db.runSync(
-      'INSERT INTO actividades (idMateria, horario, fecha, aula, descripcionActividad) VALUES (?, ?);', 
+      'INSERT INTO actividades (idMateria, horario, fecha, aula, descripcionActividad) VALUES (?, ? ,? ,? ,?);', 
         [idMateria, horario, fecha, aula, descripcionActividad]
     );
     return result.lastInsertRowId;

@@ -64,7 +64,7 @@ export default function DayActivities() {
         <View className="flex-row justify-between items-center mb-2 px-4 mt-[-18]">
           <Text className="text-xl font-semibold">Mis Actividades</Text>
           <TouchableOpacity
-            onPress={() => console.log("Agregar actividad")}
+            onPress={() => router.push("../../addActivities")}
             className="bg-blue-600 rounded-full p-2 "
           >
             <Ionicons name="add" size={20} color="white" />
