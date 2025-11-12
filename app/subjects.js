@@ -65,7 +65,7 @@ export default function MisMaterias() {
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 px-5">
         {/* Encabezado */}
-        <View className="flex-row items-center justify-between px-1 mt-[-20] mb-4">
+        <View className="flex-row items-center justify-between px-1 mt-[-20] mb-6">
           <Text className="text-2xl font-bold">Mis materias</Text>
           <TouchableOpacity
             className="bg-blue-600 p-2 rounded-full"
