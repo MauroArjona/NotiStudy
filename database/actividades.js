@@ -17,6 +17,21 @@ export const getAllActividades = () => {
   }
 };
 
+export const getColorActividad = () => {
+  try {
+    const actividades = db.getAllSync(
+      `SELECT a.fecha, m.color 
+       FROM actividades as a
+       INNER JOIN materias as m ON a.idMateria = m.idMateria
+       ORDER BY a.fecha;`
+    );
+    return actividades; 
+  } catch (error) {
+    console.error("Error al consultar fechas y colores de las actividades:", error);
+    return [];
+  }
+};
+
 export const getActividadesHoy = () => {
   try {
     const hoy = getFechaNumerica();

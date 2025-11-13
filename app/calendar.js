@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import { getColorActividad } from "../database/actividades";
 
 // 🔹 Configurar idioma en español
 LocaleConfig.locales["es"] = {
@@ -17,11 +19,37 @@ LocaleConfig.defaultLocale = "es";
 
 export default function CalendarScreen() {
   const router = useRouter();
+  const [markedDates, setMarkedDates] = useState({});
 
   const handleDayPress = (day) => {
     // Navega a la pantalla dinámica con la fecha seleccionada
     router.push(`/activities/${day.dateString}`);
   };
+
+  useEffect(() => {
+    const fetchFechas = async () => {
+      const actividades = getColorActividad(); // [{fecha, color}, ...]
+      
+      const marked = actividades.reduce((acc, a) => {
+        // Convertir DD-MM-AA -> YYYY-MM-DD
+        const [d, m, y] = a.fecha.split("-");
+        const dateKey = `20${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+
+        // Inicializar dots si no existe
+        if (!acc[dateKey]) acc[dateKey] = { dots: [] };
+
+        // Evitar duplicados de color en la misma fecha
+        if (!acc[dateKey].dots.some(dot => dot.color === a.color)) {
+          acc[dateKey].dots.push({ key: `c${a.color}`, color: a.color });
+        }
+
+        return acc;
+      }, {});
+
+      setMarkedDates(marked);
+    };
+    fetchFechas();
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
@@ -34,16 +62,13 @@ export default function CalendarScreen() {
           onDayPress={handleDayPress}
           theme={{
             selectedDayBackgroundColor: "#0030BF",
-            todayTextColor: "#0030BF",
+            todayTextColor: "#416CFA",
             arrowColor: "#0030BF",
             monthTextColor: "#000",
             textDayFontWeight: "500",
           }}
-          markedDates={{
-            "2025-11-03": { selected: true, selectedColor: "#FACC15" },
-            "2025-11-05": { selected: true, selectedColor: "#A78BFA" },
-            "2025-11-10": { selected: true, selectedColor: "#22C55E" },
-          }}
+          markingType="multi-dot"
+          markedDates={markedDates}
         />
         <View className="items-center">
           <TouchableOpacity className="bg-blue-600 rounded-lg py-2 items-center my-4 w-2/3" 
