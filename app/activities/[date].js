@@ -143,7 +143,7 @@ export default function DayActivities() {
       <SafeAreaView className="flex-1 bg-gray-100">
         <View className="flex-1 w-full max-w-md self-center">
           {/* Encabezado */}
-          <View className="flex-row justify-between items-end mb-4 px-4 mt-[-30]">
+          <View className="flex-row justify-between items-end mb-4 px-4">
             <Text className="text-xl font-semibold">Mis Actividades</Text>
             <TouchableOpacity
               onPress={() => router.push("../../addActivities")}
@@ -262,7 +262,7 @@ export default function DayActivities() {
                       key={a.idActividad}
                       renderRightActions={() => renderRightActions(a)}
                     >
-                      <View className="flex-row justify-between items-start bg-white py-3 shadow border-t border-gray-200">
+                      <View className="flex-row justify-between items-end bg-white py-3 shadow border-t border-gray-200">
                         <View className="flex-[0.7]">
                           <Text className="font-semibold text-base">
                             {a.descripcionActividad}
@@ -273,7 +273,7 @@ export default function DayActivities() {
                         <View className="items-end flex-[0.3]">
                           <Text className="text-gray-700 text-sm">{a.horario}</Text>
                           {a.aula && (
-                            <Text className="text-gray-500 text-xs">{a.aula}</Text>
+                            <Text className="text-gray-500 text-sn">{a.aula}</Text>
                           )}
                         </View>
                       </View>

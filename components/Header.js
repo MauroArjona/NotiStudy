@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     <View className="bg-blue-600 pb-4 px-4 flex-row justify-between items-center"
-    style={{ paddingTop: insets.top - 20 }}>
+    style={{ paddingTop: insets.top - 10 }}>
 
       <View className="flex-row items-center">
         {/* 🔹 "MiUni" ahora es un botón que lleva al index */}

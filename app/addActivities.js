@@ -134,7 +134,7 @@ export default function AgregarActividad() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <ScrollView className="p-4 mt-[-54]">
+      <ScrollView className="px-4 pb-4">
         <Text className="text-2xl font-bold text-center mb-4">Agregar Actividad</Text>
 
         {/* Recordarme esta actividad */}

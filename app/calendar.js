@@ -53,7 +53,7 @@ export default function CalendarScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <View className="p-4 mt-[-45]">
+      <View className="pb-4 px-4">
         <Text className="text-2xl font-bold text-center mb-4 text-black">
           Noviembre
         </Text>

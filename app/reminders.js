@@ -53,7 +53,7 @@ export default function Recordatorios() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <Text className="text-2xl font-bold mb-4 px-4 mt-[-30]">
+      <Text className="text-2xl font-bold mb-4 px-4">
         Mis recordatorios
       </Text>
 

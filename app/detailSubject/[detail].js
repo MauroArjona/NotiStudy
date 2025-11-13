@@ -69,9 +69,9 @@ export default function MateriaDetail() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
-        <View className="flex-row justify-between mb-2 px-7 mt-[-25] items-end">
-          <Text className="text-lg font-semibold mb-2 flex-[0.75]" numberOfLines={3}>{detail}</Text>
-          <Text className="text-sm text-right mb-2 flex-[0.25]">{estado}</Text>
+        <View className="flex-row justify-between mb-2 px-4 items-end">
+          <Text className="text-lg font-semibold mb-2 flex-[0.65]" numberOfLines={3}>{detail}</Text>
+          <Text className="text-sm font-semibold text-right mb-2 flex-[0.35] text-blue-500">{estado}</Text>
         </View>
 
         <ScrollView
