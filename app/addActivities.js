@@ -159,7 +159,7 @@ export default function AgregarActividad() {
 
         {/* Materia */}
         <Text className="font-semibold mb-1">Materia</Text>
-        <View className="bg-white border border-gray-300 rounded-lg mb-4">
+        <View className="bg-white border border-gray-300 rounded-lg mb-4 max-h-10 justify-center">
           <Picker selectedValue={idMateria} onValueChange={setIdMateria}>
             <Picker.Item label="Seleccioná una materia" value="" />
             {materias.map((m) => (
@@ -171,7 +171,7 @@ export default function AgregarActividad() {
         {/* Fecha de la actividad */}
         <Text className="font-semibold mb-1">Fecha de la actividad</Text>
         <TouchableOpacity
-          className="bg-white border border-gray-300 rounded-lg p-3 mb-4"
+          className="bg-white border border-gray-300 rounded-lg p-3 mb-4 justify-center"
           onPress={() => openPicker("fecha")}
         >
           <Text>{fecha || "Seleccionar fecha"}</Text>
