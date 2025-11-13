@@ -33,7 +33,7 @@ export default function Layout() {
       >
         <Header />
       </View>
-      <View style={{ flex: 1, paddingTop: insets.top + 10 /* altura del header */ }}>
+      <View style={{ flex: 1, paddingTop: insets.top + 45 /* altura del header */ }}>
         <Slot />
       </View>
     </SafeAreaView>
