@@ -41,11 +41,11 @@ export const getFechaNumerica = () => { // Formato DD-MM-AA
 };
 
 export const formatearFechaISO = (fechaISO) => {
-  // fechaISO → "2025-10-28"
+  // Transforma fechaISO → "2025-10-28" → "28-10-25"
   if (!fechaISO) { return ""; };
   const [año, mes, dia] = fechaISO.split("-");
   const a = `${dia}-${mes}-${año.slice(-2)}`;
-  return `${dia}-${mes}-${año.slice(-2)}`; // → "28-10-25"
+  return `${dia}-${mes}-${año.slice(-2)}`; 
 }
 
 //parseFecha("20-11-25")  →  Date(2025, 10, 20)

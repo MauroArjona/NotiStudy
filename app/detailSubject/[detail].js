@@ -90,7 +90,7 @@ export default function MateriaDetail() {
           )}
 
         {/* 🔹 Horarios */}
-          <View className="bg-white p-4 rounded-xl mb-3 shadow-sm">
+          <View className="bg-white p-4 rounded-xl mb-4 shadow-sm">
             <Text className="font-semibold mb-1">Horarios de clase</Text>
             <View className="border-t border-gray-200 my-2" />
             {clases.length > 0 ? (
@@ -101,7 +101,7 @@ export default function MateriaDetail() {
                     <Text className="font-semibold">{c.dia}</Text>
                   </View>
                   <View className="items-end">
-                    <Text className="text-gray-700">
+                    <Text className="text-gray-700 font-semibold">
                       {c.horarioInicio} - {c.horarioFin}
                     </Text>
                     <Text className="text-gray-500">{c.aula}</Text>
@@ -114,7 +114,7 @@ export default function MateriaDetail() {
           </View>
 
           {/* 🔹 Actividades pendientes */}
-          <View className="bg-white p-4 rounded-xl mb-3 shadow-sm">
+          <View className="bg-white p-4 rounded-xl mb-4 shadow-sm">
             <Text className="font-semibold mb-1">Actividades pendientes</Text>
             <View className="border-t border-gray-200 my-2" />
             {actividades.pendientes?.length > 0 ? (
