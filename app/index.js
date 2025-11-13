@@ -46,7 +46,7 @@ export default function HomeScreen() {
   ];
 
   return (
-     <SafeAreaView className="flex-1 bg-gray-100">
+     <View className="flex-1 bg-gray-100 mt-5">
       <View className="flex-1 w-full max-w-md self-center">
         {/* Encabezado */}
         <View className="flex-row justify-between mb-6 px-4 items-end">
@@ -124,6 +124,6 @@ export default function HomeScreen() {
         <BottomNav />
       </View>
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </SafeAreaView>
+    </View>
   );
 }
