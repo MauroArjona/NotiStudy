@@ -8,7 +8,7 @@ export default function MateriaDetail() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
-        <View className="flex-row justify-between mb-2 px-7 mt-[-18]">
+        <View className="flex-row justify-between mb-2 px-7 mt-[-25]">
           <Text className="text-lg font-semibold mb-2">{detail}</Text>
         </View>
 
