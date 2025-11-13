@@ -91,3 +91,47 @@ export const agregarActividad = (idMateria, horario, fecha, aula, descripcionAct
     return null;
   }
 };
+
+export const obtenerActividadPorId = (idActividad) => {
+  try {
+    const resultados = db.getAllSync(
+      `SELECT a.*, m.nombre 
+       FROM actividades AS a
+       INNER JOIN materias AS m ON a.idMateria = m.idMateria
+       WHERE a.idActividad = ?;`,
+      [idActividad]
+    );
+    return resultados[0] || null;
+  } catch (error) {
+    console.error("Error al obtener actividad por ID:", error);
+    return null;
+  }
+};
+
+
+export const actualizarActividad = (idActividad, idMateria, horario, fecha, aula, descripcionActividad) => {
+  const fechaFormateada = formatearFechaISO(fecha);
+  try {
+    db.runSync(
+      `UPDATE actividades
+       SET idMateria = ?, horario = ?, fecha = ?, aula = ?, descripcionActividad = ?
+       WHERE idActividad = ?;`,
+      [idMateria, horario, fechaFormateada, aula, descripcionActividad, idActividad]
+    );
+    return true;
+  } catch (error) {
+    console.error("Error al actualizar actividad:", error);
+    return false;
+  }
+};
+
+export const eliminarActividad = (idActividad) => {
+  try {
+    db.runSync(`DELETE FROM actividades WHERE idActividad = ?;`, [idActividad]);
+    return true;
+  } catch (error) {
+    console.error("Error eliminando actividad:", error);
+    return false;
+  }
+};
+

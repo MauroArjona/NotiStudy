@@ -145,3 +145,30 @@ export const eliminarRecordatorio = async (idRecordatorio) => {
   }
 };
 
+export const obtenerRecordatorioPorActividad = (idActividad) => {
+  try {
+    const resultados = db.getAllSync(
+      `SELECT * FROM recordatorios WHERE idActividad = ?;`,
+      [idActividad]
+    );
+    return resultados[0] || null; // devuelve un solo recordatorio o null
+  } catch (error) {
+    console.error("Error al obtener recordatorio por actividad:", error);
+    return null;
+  }
+};
+
+export const actualizarRecordatorio = (idRecordatorio, fechaAviso, horaAviso, activo) => {
+  try {
+    db.runSync(
+      `UPDATE recordatorios 
+       SET fechaAviso = ?, horaAviso = ?, activo = ? 
+       WHERE idRecordatorio = ?;`,
+      [fechaAviso, horaAviso, activo ? 1 : 0, idRecordatorio]
+    );
+    return true;
+  } catch (error) {
+    console.error("Error al actualizar recordatorio:", error);
+    return false;
+  }
+};
