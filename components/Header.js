@@ -1,12 +1,16 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Header() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className="bg-blue-600 pt-4 pb-4 px-4 flex-row justify-between items-center">
+    <View className="bg-blue-600 pb-4 px-4 flex-row justify-between items-center"
+    style={{ paddingTop: insets.top - 20 }}>
+
       <View className="flex-row items-center">
         {/* 🔹 "MiUni" ahora es un botón que lleva al index */}
         <TouchableOpacity onPress={() => router.push("/")}>
