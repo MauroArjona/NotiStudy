@@ -18,21 +18,13 @@ export default function DayActivities() {
   const [showPicker, setShowPicker] = useState(false);
   const [activities, setActividades] = useState([]);
 
-  /* 🔹 Simulación de actividades
-  const activities = {
-    "2025-11-03": [{ title: "2do. Parcial SETR", time: "16:00hs", location: "Lab. Ardenghi"},
-      { title: "Entrega TP3 - TNT", time: "23:59hs" }],
-    "2025-11-05": [{ title: "Entrega TP4 - TNT", time: "23:59hs" }],
-    "2025-11-10": [{ title: "Presentación paper TNT", time: "14:00hs", location: "Virtual" }],
-  };*/
-
   useEffect(() => {
     cargarActividades();
-  }, []);
+  }, [materia, fecha, actividad]);
 
   const cargarActividades = () => {
     try {
-      const activities = getActividadesFiltradas("Inteligenci"); 
+      const activities = getActividadesFiltradas(materia, fecha, actividad); 
       console.log("Actividades:", activities);
       setActividades(activities);
     } catch (error) {

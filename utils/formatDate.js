@@ -22,3 +22,10 @@ export const getFechaNumerica = () => { // Formato DD-MM-AA
   const anio = String(fecha.getFullYear()).slice(-2);
   return `${dia}-${mes}-${anio}`;
 };
+
+export const formatearFechaISO = (fechaISO) => {
+  // fechaISO → "2025-10-28"
+  if (!fechaISO) return "";
+  const [año, mes, dia] = fechaISO.split("-");
+  return `${dia}-${mes}-${año.slice(-2)}`; // → "28-10-25"
+}

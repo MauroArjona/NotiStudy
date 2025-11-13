@@ -1,4 +1,4 @@
-import { getFechaNumerica } from '../utils/formatDate';
+import { formatearFechaISO, getFechaNumerica } from '../utils/formatDate';
 import db from './db';
 
 export const getAllActividades = () => {
@@ -39,6 +39,8 @@ export const getActividadesHoy = () => {
 
 export const getActividadesFiltradas = (nombreMateria = "", fecha = "", descripcion = "") => {
   try {
+    const fechaFormateada = formatearFechaISO(fecha);
+    console.log(fechaFormateada);
     // Base de la consulta
     let query = `
       SELECT a.*, m.nombre
@@ -54,9 +56,9 @@ export const getActividadesFiltradas = (nombreMateria = "", fecha = "", descripc
       condiciones.push("m.nombre LIKE ?");
       valores.push(`%${nombreMateria}%`);
     }
-    if (fecha) {
+    if (fechaFormateada) {
       condiciones.push("a.fecha = ?");
-      valores.push(fecha);
+      valores.push(fechaFormateada);
     }
     if (descripcion) {
       condiciones.push("a.descripcionActividad LIKE ?");
