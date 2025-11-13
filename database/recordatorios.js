@@ -19,8 +19,6 @@ export const getRecordatoriosProximos = () => {
        ORDER BY r.fechaAviso ASC, r.horaAviso ASC;`,
       [hoy]
     );
-
-    console.log("Recordatorios obtenidos ✅");
     return recordatorios;
   } catch (error) {
     console.error("Error al consultar recordatorios:", error);

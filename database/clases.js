@@ -12,7 +12,6 @@ export const getClasesHoy = () => {
        ORDER BY c.horarioInicio;`, 
        [hoy]
     );
-    console.log("Clases del día obtenidas ✅");
     return clases; 
   } catch (error) {
     console.error("Error al obtener clases del día:", error);
@@ -34,3 +33,31 @@ export const agregarClase = (idMateria, horarioInicio, horarioFin, dia, aula, ti
     return null;
   }
 };
+
+export const getClasesPorMateria = (nombreMateria) => {
+  try {
+    const clases = db.getAllSync(`
+      SELECT c.*, m.nombre 
+      FROM clases as c 
+      INNER JOIN materias as m ON c.idMateria = m.idMateria
+      WHERE m.nombre = ?
+      ORDER BY 
+        CASE c.dia
+          WHEN 'Lunes' THEN 1
+          WHEN 'Martes' THEN 2
+          WHEN 'Miércoles' THEN 3
+          WHEN 'Jueves' THEN 4
+          WHEN 'Viernes' THEN 5
+          WHEN 'Sábado' THEN 6
+          WHEN 'Domingo' THEN 7
+        END,
+        c.horarioInicio;
+    `, [nombreMateria]);
+    
+    return clases;
+  } catch (error) {
+    console.error("Error al obtener clases por materia:", error);
+    return [];
+  }
+};
+

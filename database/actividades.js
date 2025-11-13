@@ -10,7 +10,6 @@ export const getAllActividades = () => {
        ORDER BY a.fecha
        LIMIT 5;`
     );
-    console.log("Actividades obtenidas ✅");
     return actividades; 
   } catch (error) {
     console.error("Error al consultar actividades:", error);
@@ -29,7 +28,6 @@ export const getActividadesHoy = () => {
        ORDER BY a.fecha`, 
        [hoy]
     );
-    console.log("Actividades obtenidas ✅");
     return actividades; 
   } catch (error) {
     console.error("Error al consultar actividades:", error);
@@ -47,5 +45,23 @@ export const agregarActividad = (idMateria, horario, fecha, aula, descripcionAct
   } catch (error) {
     console.error("Error al agregar actividad:", error);
     return null;
+  }
+};
+
+export const getActividadesPorMateria = (nombreMateria) => {
+  try {
+    const actividades = db.getAllSync(
+      `SELECT a.*, m.nombre 
+       FROM actividades AS a
+       INNER JOIN materias AS m ON a.idMateria = m.idMateria
+       WHERE m.nombre = ?
+       ORDER BY a.fecha, a.horario;`,
+      [nombreMateria]
+    );
+    console.log(`Actividades de ${nombreMateria} obtenidas ✅`);
+    return actividades;
+  } catch (error) {
+    console.error("Error al obtener actividades por materia:", error);
+    return [];
   }
 };
