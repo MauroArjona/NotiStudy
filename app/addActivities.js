@@ -7,55 +7,110 @@ import { useRouter } from "expo-router";
 import { agregarActividad } from "../database/actividades";
 import { agregarRecordatorio } from "../database/recordatorios";
 import { getMaterias } from "../database/materias";
+import SuccessModal from "../components/SuccessModal";
 
 export default function AgregarActividad() {
   const router = useRouter();
 
-  // 🔹 Datos de formulario
+  // 🔹 Estados principales
   const [idMateria, setIdMateria] = useState("");
   const [fecha, setFecha] = useState("");
-  const [fechaAviso, setFechaAviso] = useState(""); 
+  const [fechaAviso, setFechaAviso] = useState("");
   const [horario, setHorario] = useState("");
   const [aula, setAula] = useState("");
   const [descripcionActividad, setDescripcionActividad] = useState("");
   const [recordarme, setRecordarme] = useState(false);
-
   const [materias, setMaterias] = useState(getMaterias("En Curso"));
 
   // 🔹 DateTimePicker
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerType, setPickerType] = useState("fecha"); 
+  const [pickerType, setPickerType] = useState("fecha");
+
+  // 🔹 Modal de éxito
+  const [modalVisible, setModalVisible] = useState(false);
 
   const openPicker = (type) => {
     setPickerType(type);
     setShowPicker(true);
   };
 
+  // 🔹 Formatear fecha y hora
+  const formatDate = (date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  };
+
+  const formatTime = (date) => {
+    const h = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+    return `${h}:${min}`;
+  };
+
+  // 🔹 Manejo del cambio de fecha/hora
   const onPickerChange = (event, selectedDate) => {
     if (!selectedDate) {
       setShowPicker(false);
       return;
     }
 
-    const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-    const day = String(selectedDate.getDate()).padStart(2, "0");
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
 
+    // 🔸 Validación de fechas (no permitir anteriores)
+    if (pickerType === "fecha" || pickerType === "fechaAviso") {
+      const fechaSeleccionada = new Date(selectedDate);
+      fechaSeleccionada.setHours(0, 0, 0, 0);
+
+      if (fechaSeleccionada < hoy) {
+        Alert.alert("Fecha inválida", "La fecha no puede ser anterior a hoy.");
+        setShowPicker(false);
+        return;
+      }
+    }
+
+    // 🔸 Validación de hora (si la fechaAviso es hoy)
+    if (pickerType === "hora" && fechaAviso) {
+      console.log("⏰ Validando hora para fechaAviso:", fechaAviso);
+
+      const [y, m, d] = fechaAviso.split("-").map(Number);
+      const fechaAvisoObj = new Date(y, m - 1, d); // ✅ Local time
+      const hoy = new Date();
+      fechaAvisoObj.setHours(0, 0, 0, 0);
+      hoy.setHours(0, 0, 0, 0);
+
+      console.log("⏰ Validando hora para fechaAviso:", fechaAvisoObj.getTime(), hoy.getTime());
+
+      if (fechaAvisoObj.getTime() === hoy.getTime()) {
+        const ahora = new Date();
+        const [hActual, mActual] = [ahora.getHours(), ahora.getMinutes()];
+        const [hSel, mSel] = [selectedDate.getHours(), selectedDate.getMinutes()];
+
+        console.log("⏰ Actual:", hActual, mActual, "| Seleccionada:", hSel, mSel);
+
+        if (hSel < hActual || (hSel === hActual && mSel <= mActual)) {
+          Alert.alert("Hora inválida", "La hora debe ser posterior a la hora actual.");
+          setShowPicker(false);
+          return;
+        }
+      }
+    }
+
+    // 🔸 Guardar valores formateados
     if (pickerType === "fecha") {
-      setFecha(`${year}-${month}-${day}`);
+      setFecha(formatDate(selectedDate));
     } else if (pickerType === "fechaAviso") {
-      setFechaAviso(`${year}-${month}-${day}`);
+      setFechaAviso(formatDate(selectedDate));
     } else {
-      const horas = String(selectedDate.getHours()).padStart(2, "0");
-      const minutos = String(selectedDate.getMinutes()).padStart(2, "0");
-      setHorario(`${horas}:${minutos}`);
+      setHorario(formatTime(selectedDate));
     }
 
     setShowPicker(false);
   };
 
-  // 🔹 Guardar actividad y recordatorio
-  const handleGuardar = () => {
+  // 🔹 Guardar actividad + recordatorio
+  const handleGuardar = async () => {
     if (!idMateria || !fecha || !horario || !descripcionActividad.trim() || !fechaAviso) {
       Alert.alert("Error", "Completá todos los campos obligatorios (incluyendo la fecha de aviso)");
       return;
@@ -67,15 +122,11 @@ export default function AgregarActividad() {
       const activo = recordarme ? 1 : 0;
       const horaAviso = horario;
 
-      const idRec = agregarRecordatorio(idActividad, fechaAviso, horaAviso, activo);
-      if (idRec) {
-        console.log(`Recordatorio agregado con fechaAviso=${fechaAviso} ✅`);
-      } else {
-        console.error("Error creando el recordatorio ❌");
-      }
+      const idRec = await agregarRecordatorio(idActividad, fechaAviso, horaAviso, activo);
+      if (idRec) console.log(`Recordatorio agregado con fechaAviso=${fechaAviso} ✅`);
+      else console.error("Error creando el recordatorio ❌");
 
-      Alert.alert("✅ Actividad y recordatorio guardados correctamente");
-      router.back();
+      setModalVisible(true);
     } else {
       Alert.alert("❌ Error", "No se pudo guardar la actividad");
     }
@@ -97,8 +148,8 @@ export default function AgregarActividad() {
           />
         </View>
 
-        {/* 🔹 Fecha de aviso */}
-        <Text className="font-semibold mb-1">Recordarme el dia</Text>
+        {/* Fecha de aviso */}
+        <Text className="font-semibold mb-1">Recordarme el día</Text>
         <TouchableOpacity
           className="bg-white border border-gray-300 rounded-lg p-3 mb-4"
           onPress={() => openPicker("fechaAviso")}
@@ -171,7 +222,7 @@ export default function AgregarActividad() {
           </TouchableOpacity>
         </View>
 
-        {/* Picker */}
+        {/* DateTimePicker */}
         {showPicker && (
           <DateTimePicker
             value={new Date()}
@@ -183,6 +234,16 @@ export default function AgregarActividad() {
       </ScrollView>
 
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
+
+      {/* 🟢 Modal de éxito */}
+      <SuccessModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+          router.back();
+        }}
+        mensaje="Actividad y recordatorio guardados correctamente 🎉"
+      />
     </SafeAreaView>
   );
 }

@@ -6,6 +6,7 @@ export const initDB = () => {
     try {
         //try { db.runSync("DROP TABLE IF EXISTS clases;"); } catch {}
         //try { db.runSync("DROP TABLE IF EXISTS materias;"); } catch {}
+        //try { db.runSync("DROP TABLE IF EXISTS recordatorios;"); } catch {}
         db.runSync(
             `CREATE TABLE IF NOT EXISTS materias (
                 idMateria INTEGER PRIMARY KEY AUTOINCREMENT,
