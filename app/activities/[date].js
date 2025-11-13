@@ -2,9 +2,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {View,Text,ScrollView,TextInput,TouchableOpacity,Alert,} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Card from "../../components/Card";
+import { getActividadesFiltradas } from "../../database/actividades";
 
 export default function DayActivities() {
   const { date } = useLocalSearchParams();
@@ -15,21 +16,28 @@ export default function DayActivities() {
   const [materia, setMateria] = useState("");
   const [fecha, setFecha] = useState(date || "");
   const [showPicker, setShowPicker] = useState(false);
+  const [activities, setActividades] = useState([]);
 
-  // 🔹 Simulación de actividades
+  /* 🔹 Simulación de actividades
   const activities = {
-    "2025-11-03": [
-      {
-        title: "2do. Parcial SETR",
-        time: "16:00hs",
-        location: "Lab. Ardenghi",
-      },
-      { title: "Entrega TP3 - TNT", time: "23:59hs" },
-    ],
+    "2025-11-03": [{ title: "2do. Parcial SETR", time: "16:00hs", location: "Lab. Ardenghi"},
+      { title: "Entrega TP3 - TNT", time: "23:59hs" }],
     "2025-11-05": [{ title: "Entrega TP4 - TNT", time: "23:59hs" }],
-    "2025-11-10": [
-      { title: "Presentación paper TNT", time: "14:00hs", location: "Virtual" },
-    ],
+    "2025-11-10": [{ title: "Presentación paper TNT", time: "14:00hs", location: "Virtual" }],
+  };*/
+
+  useEffect(() => {
+    cargarActividades();
+  }, []);
+
+  const cargarActividades = () => {
+    try {
+      const activities = getActividadesFiltradas("Inteligenci"); 
+      console.log("Actividades:", activities);
+      setActividades(activities);
+    } catch (error) {
+      console.error("Error cargando las actividades:", error);
+    }
   };
 
   const items = activities[date] || [];
@@ -61,7 +69,7 @@ export default function DayActivities() {
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
         {/* 🔹 Encabezado */}
-        <View className="flex-row justify-between items-center mb-2 px-4 mt-[-18]">
+        <View className="flex-row justify-between items-end mb-4 px-4 mt-[-30]">
           <Text className="text-xl font-semibold">Mis Actividades</Text>
           <TouchableOpacity
             onPress={() => router.push("../../addActivities")}
@@ -93,14 +101,14 @@ export default function DayActivities() {
             onPress={() => setShowPicker(true)}
             className="bg-white border border-gray-300 rounded-lg px-3 py-2 flex-1 mr-2"
           >
-            <Text className="text-gray-700" numberOfLines={1} ellipsizeMode="tail">
-                {fecha
+            <Text className={`${fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha) ? "text-gray-700" : "text-gray-400"}`} numberOfLines={1} ellipsizeMode="tail">
+                {fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha)
                     ? (() => {
                         const [y, m, d] = fecha.split("-");
                         const localDate = new Date(y, m - 1, d); 
                         return localDate.toLocaleDateString("es-AR");
                         })()
-                    : "Seleccionar fecha"}
+                    : "Fecha"}
             </Text>
           </TouchableOpacity>
 
@@ -109,6 +117,7 @@ export default function DayActivities() {
                 value={fecha ? new Date(fecha) : new Date()}
                 mode="date"
                 display="default"
+                minimumDate={new Date(2022, 0, 1)} 
                 onChange={(event, selectedDate) => {
                     setShowPicker(false);
                     if (selectedDate) {

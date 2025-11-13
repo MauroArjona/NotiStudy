@@ -13,6 +13,19 @@ export const getMaterias = (estado) => {
   }
 };
 
+export const getEstadoMateria = (materia) => {
+  try {
+    const rta = db.getFirstSync(
+      'SELECT estado FROM materias WHERE nombre = ?;', [materia] 
+    );
+    console.log("Estado de materia obtenido ✅");
+    return rta.estado; // devuelve un array de objetos
+  } catch (error) {
+    console.error("Error al obtener el estado:", error);
+    return "Error";
+  }
+};
+
 export const agregarMateria = (nombre, estado, color, comentario) => {
   try {
     const result = db.runSync(
