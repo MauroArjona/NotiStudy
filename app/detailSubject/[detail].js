@@ -2,43 +2,54 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { getClasesPorMateria } from "../../database/clases";
-import { getComentarioPorMateria } from '../../database/materias';
-import { getActividadesPorMateria } from "../../database/actividades";
-import { getFechaNumerica } from '../../utils/formatDate';
-import {parseFecha} from '../../utils/formatDate';
-import {formatearFecha} from '../../utils/formatDate';
 
 export default function MateriaDetail() {
   const { detail } = useLocalSearchParams();
+  const [actividades, setActividades] = useState([]);
   const [clases, setClases] = useState([]);
   const [comentario, setComentario] = useState(null);
-  const [actividades, setActividades] = useState([]);
+  const [estado, setEstado] = useState("");
 
   useEffect(() => {
-    const clases = getClasesPorMateria(detail);
-    const comentario = getComentarioPorMateria(detail);
-    const actividades = getActividadesPorMateria(detail);
+    cargarActividades();
+    cargarClases();
+    cargarEstado();
+  }, []);
 
-    const hoyStr = getFechaNumerica();         // "13-11-25"
-    const hoy = parseFecha(hoyStr);            // Date(2025-11-13)
+  const cargarActividades = () => {
+    try {
+      const actividades = getActividadesFiltradas(detail); 
+      console.log("Actividades de la materia:", actividades);
+      setActividades(actividades);
+    } catch (error) {
+      console.error("Error cargando las actividades de la materia:", error);
+    }
+  };
+  const cargarClases = () => {
+    try {
+      const clases = getClasesMateria(detail); 
+      console.log("Clases de la materia:", clases);
+      setClases(clases);
+    } catch (error) {
+      console.error("Error cargando las actividades de la materia:", error);
+    }
+  };
 
-    const pendientes = actividades.filter(a => parseFecha(a.fecha) >= hoy);
-    const anteriores = actividades.filter(a => parseFecha(a.fecha) < hoy);
-
-    pendientes.sort((a, b) => parseFecha(a.fecha) - parseFecha(b.fecha));
-    anteriores.sort((a, b) => parseFecha(b.fecha) - parseFecha(a.fecha));
-
-    setClases(clases);
-    setComentario(comentario);
-    setActividades({ pendientes, anteriores });
-  }, [detail]);
+  const cargarEstado = () => {
+    try {
+      const data = getEstadoMateria(detail);
+      setEstado(data);
+    } catch (error) {
+      console.error("Error al cargar estado:", error);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
-        <View className="flex-row justify-between mb-2 px-7 mt-[-18]">
-          <Text className="text-lg font-semibold mb-2">{detail}</Text>
+        <View className="flex-row justify-between mb-2 px-7 mt-[-25] items-end">
+          <Text className="text-lg font-semibold mb-2 flex-[0.75]" numberOfLines={3}>{detail}</Text>
+          <Text className="text-sm text-right mb-2 flex-[0.25]">{estado}</Text>
         </View>
 
         <ScrollView
@@ -68,11 +79,26 @@ export default function MateriaDetail() {
 
         {comentario && (
           <View className="bg-white p-4 rounded-xl mb-3 shadow-sm">
-            <Text className="font-semibold mb-1">Comentario</Text>
+            <Text className="font-semibold mb-1">Horarios de clase</Text>
             <View className="border-t border-gray-200 my-2" />
-            <Text className="text-gray-500 text-sm">
-              {comentario}
-            </Text>
+            {clases.length > 0 ? (
+              clases.map((c) => (
+                <View key={c.idClase}
+                  className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3">
+                  <View className="flex-1">
+                    <Text className="font-semibold">{c.dia}</Text>
+                  </View>
+                  <View className="items-end">
+                    <Text className="text-gray-700">
+                      {c.horarioInicio} - {c.horarioFin}
+                    </Text>
+                    <Text className="text-gray-500">{c.aula}</Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text className="text-gray-500 text-center py-3">No hay clases registradas</Text>
+            )}
           </View>
         )}
 
@@ -81,37 +107,25 @@ export default function MateriaDetail() {
           <View className="bg-white p-4 rounded-xl mb-3 shadow-sm">
             <Text className="font-semibold mb-1">Actividades pendientes</Text>
             <View className="border-t border-gray-200 my-2" />
-            {actividades.pendientes?.length > 0 ? (
-              actividades.pendientes.map((act) => (
-                <View key={act.idActividad} className="py-2 border-b border-gray-100">
-                  <Text className="text-gray-700">
-                    {act.descripcionActividad} — {formatearFecha(act.fecha)} — {act.horario}hs
-                  </Text>
-                  {act.aula && <Text className="text-gray-500 text-sm">{act.aula}</Text>}
+              { actividades.length > 0 ? (
+                actividades.map((a) => (
+                <View key={a.idActividad} className="flex-row justify-between items-start mb-2 border-b border-gray-100 my-1 pb-3">
+                    <View className="flex-1">
+                      <Text className="font-semibold">{a.descripcionActividad}</Text>
+                      <Text className="text-gray-500">{a.horario} {a.aula ? ` - ${a.aula}` : ""}</Text>
+                    </View>
+                    <View style={{ maxWidth: "50%" }} className="items-end">
+                      <Text className="font-semibold text-right text-gray-800" numberOfLines={2} ellipsizeMode="tail">
+                        {a.fecha}</Text>
+                    </View>
                 </View>
               ))
             ) : (
-              <Text className="text-gray-500">No hay actividades pendientes</Text>
+              <Text className="text-gray-500 text-center py-3">
+                No hay actividades para hoy
+              </Text>
             )}
-          </View>
-
-          {/* 🔹 Actividades anteriores */}
-          <View className="bg-white p-4 rounded-xl shadow-sm">
-            <Text className="font-semibold mb-1">Actividades anteriores</Text>
-            <View className="border-t border-gray-200 my-2" />
-            {actividades.anteriores?.length > 0 ? (
-              actividades.anteriores.map((act) => (
-                <View key={act.idActividad} className="py-2 border-b border-gray-100">
-                  <Text className="text-gray-700">
-                    {act.descripcionActividad} — {formatearFecha(act.fecha)}
-                  </Text>
-                </View>
-              ))
-            ) : (
-              <Text className="text-gray-500">No hay actividades anteriores</Text>
-            )}
-          </View>
-
+           </View>
 
         </ScrollView>
       </View>

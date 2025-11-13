@@ -8,13 +8,31 @@ export const getClasesHoy = () => {
       `SELECT c.*, m.nombre 
        FROM clases as c 
        INNER JOIN materias as m ON c.idMateria = m.idMateria
-       WHERE c.dia = ?
+       WHERE c.dia = ? AND m.estado = "En Curso"
        ORDER BY c.horarioInicio;`, 
        [hoy]
     );
     return clases; 
   } catch (error) {
     console.error("Error al obtener clases del día:", error);
+    return [];
+  }
+};
+
+export const getClasesMateria = (materia) => {
+  try {
+    const clases = db.getAllSync(
+      `SELECT c.*, m.nombre 
+       FROM clases as c 
+       INNER JOIN materias as m ON c.idMateria = m.idMateria
+       WHERE m.nombre = ?
+       ORDER BY c.dia;`, 
+       [materia]
+    );
+    console.log("Clases de la materia obtenidas ✅");
+    return clases; 
+  } catch (error) {
+    console.error("Error al obtener clases de la materia:", error);
     return [];
   }
 };

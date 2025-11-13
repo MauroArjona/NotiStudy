@@ -1,6 +1,7 @@
-import { SafeAreaView, View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // 🔹 Configurar idioma en español
 LocaleConfig.locales["es"] = {
@@ -24,12 +25,12 @@ export default function CalendarScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <View className="p-4">
+      <View className="p-4 mt-[-45]">
         <Text className="text-2xl font-bold text-center mb-4 text-black">
           Noviembre
         </Text>
 
-        <Calendar
+        <Calendar className="rounded-xl"
           onDayPress={handleDayPress}
           theme={{
             selectedDayBackgroundColor: "#0030BF",
@@ -44,12 +45,20 @@ export default function CalendarScreen() {
             "2025-11-10": { selected: true, selectedColor: "#22C55E" },
           }}
         />
-
-        <Text className="text-center text-gray-600 mt-6">
-          Actividades: examen, final, entrega, proyecto, presentación
-        </Text>
+        <View className="items-center">
+          <TouchableOpacity className="bg-blue-600 rounded-lg py-2 items-center my-4 w-2/3" 
+            onPress={() =>
+            router.push({
+              pathname: "/activities/''"
+            })
+          }>
+            <Text className="text-white font-semibold p-2">   
+              Ver todas mis actividades
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-        <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
+      <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
     </SafeAreaView>
   );
 }
