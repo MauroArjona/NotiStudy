@@ -37,8 +37,7 @@ export const getActividadesHoy = () => {
 
 export const getActividadesFiltradas = (nombreMateria = "", fecha = "", descripcion = "") => {
   try {
-    const fechaFormateada = formatearFechaISO(fecha);
-    console.log(fechaFormateada);
+    const fechaFormateada = fecha && fecha.trim() !== "" ? formatearFechaISO(fecha) : "";
     // Base de la consulta
     let query = `
       SELECT a.*, m.nombre

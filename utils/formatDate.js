@@ -15,6 +15,23 @@ export const getStringFechaActual = () => {
   return `${diaSemana} ${dia} de ${mes}`;
 };
 
+export const getStringFecha = (fechaStr) => {
+  const [dia, mes, anio] = fechaStr.split("-");
+  const fecha = new Date(`20${anio}`, Number(mes) - 1, Number(dia));
+  const dias = [
+    "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"
+  ];
+  const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const diaSemana = dias[fecha.getDay()];
+  const diaNum = fecha.getDate();
+  const mesNombre = meses[fecha.getMonth()];
+
+  return `${diaSemana} ${diaNum} de ${mesNombre}`;
+};
+
 export const getFechaNumerica = () => { // Formato DD-MM-AA
   const fecha = new Date();
   const dia = String(fecha.getDate()).padStart(2, '0');
@@ -25,8 +42,9 @@ export const getFechaNumerica = () => { // Formato DD-MM-AA
 
 export const formatearFechaISO = (fechaISO) => {
   // fechaISO → "2025-10-28"
-  if (!fechaISO) return "";
+  if (!fechaISO) { return ""; };
   const [año, mes, dia] = fechaISO.split("-");
+  const a = `${dia}-${mes}-${año.slice(-2)}`;
   return `${dia}-${mes}-${año.slice(-2)}`; // → "28-10-25"
 }
 

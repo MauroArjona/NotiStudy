@@ -49,7 +49,7 @@ export default function CalendarScreen() {
           <TouchableOpacity className="bg-blue-600 rounded-lg py-2 items-center my-4 w-2/3" 
             onPress={() =>
             router.push({
-              pathname: "/activities/''"
+              pathname: "/activities/all"
             })
           }>
             <Text className="text-white font-semibold p-2">   

@@ -4,17 +4,20 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Card from "../../components/Card";
 import { getActividadesFiltradas } from "../../database/actividades";
+import { getStringFecha } from "../../utils/formatDate";
 
 export default function DayActivities() {
   const { date } = useLocalSearchParams();
   const router = useRouter();
 
+  const fechaValida = date === "all" ? null : date;
+  const hoy = new Date();
+
   // 🔹 Estados para los inputs
   const [actividad, setActividad] = useState("");
   const [materia, setMateria] = useState("");
-  const [fecha, setFecha] = useState(date || "");
+  const [fecha, setFecha] = useState(fechaValida);
   const [showPicker, setShowPicker] = useState(false);
   const [activities, setActividades] = useState([]);
 
@@ -32,11 +35,10 @@ export default function DayActivities() {
     }
   };
 
-  const items = activities[date] || [];
-
   // 🔹 Formato legible de fecha (sin error de zona horaria)
   const [year, month, day] = date.split("-");
   const fechaLocal = new Date(year, month - 1, day);
+
 
   const fechaLegible = fechaLocal.toLocaleDateString("es-AR", {
     weekday: "long",
@@ -106,12 +108,18 @@ export default function DayActivities() {
 
           {showPicker && (
             <DateTimePicker
-                value={fecha ? new Date(fecha) : new Date()}
+                value={fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha) ? new Date(fecha) : new Date()}
                 mode="date"
                 display="default"
-                minimumDate={new Date(2022, 0, 1)} 
+                minimumDate={new Date(2020, 0, 1)} 
                 onChange={(event, selectedDate) => {
                     setShowPicker(false);
+
+                    if (event.type === "dismissed" || !selectedDate) {
+                      console.log("Selección cancelada ❌");
+                      return; // no actualiza la fecha
+                    }
+
                     if (selectedDate) {
                         // ✅ Tomar la fecha seleccionada en hora local
                         const year = selectedDate.getFullYear();
@@ -143,32 +151,44 @@ export default function DayActivities() {
           contentContainerStyle={{ paddingBottom: 160 }}
           showsVerticalScrollIndicator={false}
         >
-          <Card title={fechaFormateada}>
-            {items.length === 0 ? (
+          {activities.length > 0 ? (
+            // 🔹 Agrupar por fecha
+            Object.entries(
+              activities.reduce((acc, a) => {
+                if (!acc[a.fecha]) acc[a.fecha] = [];
+                acc[a.fecha].push(a);
+                return acc;
+              }, {})
+            ).map(([fecha, actividadesDeEseDia]) => (
+              <View key={fecha} className="bg-white px-4 pt-4 pb-2 rounded-xl mb-3 shadow-sm">
+                {/* Encabezado de fecha */}
+                <Text className="text-lg font-semibold mb-3">{getStringFecha(fecha)}</Text>
+
+                {/* Actividades del mismo día */}
+                {actividadesDeEseDia.map((a) => (
+                  <View
+                    key={a.idActividad}
+                    className="flex-row justify-between items-end bg-white py-3 shadow border-t border-gray-200"
+                  >
+                    <View className="flex-[0.7]">
+                      <Text className="font-semibold">{a.descripcionActividad}</Text>
+                      <Text className="text-gray-500">{a.nombre}</Text>
+                    </View>
+                    <View className="items-end flex-[0.3]">
+                      <Text className="text-gray-700">{a.horario}</Text>
+                      {a.aula && <Text className="text-gray-500">{a.aula}</Text> }
+                    </View>
+                  </View>
+                ))}
+              </View>
+            ))
+          ) : (
+            <View title={fechaFormateada} className="bg-white p-4 rounded-2xl shadow mb-4">
               <Text className="text-gray-500 text-center py-2">
                 No hay actividades.
               </Text>
-            ) : (
-              items.map((a, i) => (
-                <View
-                  key={i}
-                  className={`flex-row justify-between items-start py-2 ${
-                    i < items.length - 1 ? "border-b border-gray-200" : ""
-                  }`}
-                >
-                  <View className="flex-1">
-                    <Text className="font-semibold">{a.title}</Text>
-                  </View>
-                  <View className="items-end">
-                    <Text className="text-gray-700">{a.time}</Text>
-                    {a.location && (
-                      <Text className="text-gray-500">{a.location}</Text>
-                    )}
-                  </View>
-                </View>
-              ))
-            )}
-          </Card>
+            </View>
+          )}
         </ScrollView>
       </View>
         <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
