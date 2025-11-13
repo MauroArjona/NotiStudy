@@ -8,7 +8,7 @@ export const getClasesHoy = () => {
       `SELECT c.*, m.nombre 
        FROM clases as c 
        INNER JOIN materias as m ON c.idMateria = m.idMateria
-       WHERE c.dia = ?
+       WHERE c.dia = ? AND m.estado = "En Curso"
        ORDER BY c.horarioInicio;`, 
        [hoy]
     );
