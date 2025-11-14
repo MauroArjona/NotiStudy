@@ -109,14 +109,14 @@ export default function DayActivities() {
               params: { idActividad: actividad.idActividad },
             })
           }
-          className="bg-blue-500 justify-center items-center w-16"
+          className="bg-blue-500 justify-center items-center w-16 rounded-l-xl"
         >
           <Ionicons name="pencil" size={20} color="white" />
         </RectButton>
 
         <RectButton
           onPress={() => handleEliminar(actividad.idActividad)}
-          className="bg-red-500 justify-center items-center w-16"
+          className="bg-red-500 justify-center items-center w-16 rounded-r-xl"
         >
           <Ionicons name="trash" size={20} color="white" />
         </RectButton>
