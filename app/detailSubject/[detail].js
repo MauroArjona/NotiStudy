@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { getEstadoMateria, getComentarioPorMateria } from '../../database/materias';
@@ -67,7 +66,7 @@ export default function MateriaDetail() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
         <View className="flex-row justify-between mb-2 px-4 items-end">
           <Text className="text-lg font-semibold mb-2 flex-[0.65]" numberOfLines={3}>{detail}</Text>
@@ -75,7 +74,7 @@ export default function MateriaDetail() {
         </View>
 
         <ScrollView
-          className="flex-1 p-4"
+          className="flex-1 px-4"
           contentContainerStyle={{ paddingBottom: 140 }}
           showsVerticalScrollIndicator={false}
         >
@@ -168,6 +167,6 @@ export default function MateriaDetail() {
       </View>
 
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </SafeAreaView>
+    </View>
   );
 }

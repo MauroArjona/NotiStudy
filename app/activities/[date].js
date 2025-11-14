@@ -1,4 +1,3 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
   Text,
@@ -140,7 +139,7 @@ export default function DayActivities() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="flex-1 bg-gray-100">
+      <View className="flex-1 bg-gray-100">
         <View className="flex-1 w-full max-w-md self-center">
           {/* Encabezado */}
           <View className="flex-row justify-between items-end mb-4 px-4">
@@ -299,7 +298,7 @@ export default function DayActivities() {
           mensaje={modalMensaje}
           onClose={() => setModalVisible(false)}
         />
-      </SafeAreaView>
+      </View>
     </GestureHandlerRootView>
   );
 }

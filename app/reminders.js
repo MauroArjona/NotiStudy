@@ -52,7 +52,7 @@ export default function Recordatorios() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100">
       <Text className="text-2xl font-bold mb-4 px-4">
         Mis recordatorios
       </Text>
@@ -123,6 +123,6 @@ export default function Recordatorios() {
         mensaje={modalMensaje}
         onClose={() => setModalVisible(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }

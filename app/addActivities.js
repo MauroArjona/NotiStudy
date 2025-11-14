@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Switch } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
@@ -133,7 +132,7 @@ export default function AgregarActividad() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100 pb-10">
       <ScrollView className="px-4 pb-4">
         <Text className="text-2xl font-bold text-center mb-4">Agregar Actividad</Text>
 
@@ -244,6 +243,6 @@ export default function AgregarActividad() {
         }}
         mensaje="Actividad y recordatorio guardados correctamente 🎉"
       />
-    </SafeAreaView>
+    </View>
   );
 }

@@ -8,7 +8,6 @@ import {
   Alert,
   Switch,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -168,8 +167,8 @@ export default function EditarActividad() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <ScrollView className="p-4 mt-[-54]">
+    <View className="flex-1 bg-gray-100">
+      <ScrollView className="px-4">
         <Text className="text-2xl font-bold text-center mb-4">Editar Actividad</Text>
 
         {/* Recordarme esta actividad */}
@@ -278,6 +277,6 @@ export default function EditarActividad() {
         }}
         mensaje="Actividad actualizada correctamente 🎉"
       />
-    </SafeAreaView>
+    </View>
   );
 }

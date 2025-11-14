@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import { getColorActividad } from "../database/actividades";
 
@@ -15,6 +14,7 @@ LocaleConfig.locales["es"] = {
   dayNames: ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],
   dayNamesShort: ["D","L","M","M","J","V","S"]
 };
+const mesActualNro = new Date().getMonth(); 
 LocaleConfig.defaultLocale = "es";
 
 export default function CalendarScreen() {
@@ -52,10 +52,10 @@ export default function CalendarScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100">
       <View className="pb-4 px-4">
         <Text className="text-2xl font-bold text-center mb-4 text-black">
-          Noviembre
+          {LocaleConfig.locales["es"].monthNames[mesActualNro]}
         </Text>
 
         <Calendar className="rounded-xl"
@@ -84,6 +84,6 @@ export default function CalendarScreen() {
         </View>
       </View>
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </SafeAreaView>
+    </View>
   );
 }

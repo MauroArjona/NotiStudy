@@ -1,4 +1,3 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -62,7 +61,7 @@ export default function MisMaterias() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100">
       <View className="flex-1 px-5">
         {/* Encabezado */}
         <View className="flex-row items-center justify-between px-1 mb-6">
@@ -102,6 +101,6 @@ export default function MisMaterias() {
 
       {/* Barra inferior */}
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </SafeAreaView>
+    </View>
   );
 }

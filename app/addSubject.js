@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { agregarMateria } from '../database/materias.js';
@@ -135,7 +134,7 @@ export default function AgregarMateria() {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <View className="flex-1 bg-gray-100">
       <ScrollView className="pb-4 px-4">
         <View className="mx-3">
         <Text className="text-2xl font-bold text-center mb-4">Agregar Materia</Text>
@@ -324,6 +323,6 @@ export default function AgregarMateria() {
       </View>
       </ScrollView>
       <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </SafeAreaView>
+    </View>
   );
 }

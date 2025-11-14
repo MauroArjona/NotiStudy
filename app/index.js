@@ -1,6 +1,4 @@
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, Text, ScrollView, TouchableOpacity, FlatList } from "react-native";
-import { useRouter } from "expo-router";
+import { View, Text, FlatList } from "react-native";
 import Card from "../components/Card";
 import BottomNav from "../components/BottomNav";
 import { getClasesHoy } from "../database/clases"; 
@@ -9,9 +7,6 @@ import { getStringFechaActual } from "../utils/formatDate";
 import { getActividadesHoy } from "../database/actividades";
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
-
-  const router = useRouter();
   const [clasesHoy, setClasesHoy] = useState([]);
   const [actividadesHoy, setActividades] = useState([]);
     
@@ -46,7 +41,7 @@ export default function HomeScreen() {
   ];
 
   return (
-     <View className="flex-1 bg-gray-100 mt-5">
+     <View className="flex-1 bg-gray-100">
       <View className="flex-1 w-full max-w-md self-center">
         {/* Encabezado */}
         <View className="flex-row justify-between mb-6 px-4 items-end">

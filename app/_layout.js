@@ -23,7 +23,7 @@ export default function Layout() {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
         <Header />
-      <View style={{ flex: 1 /* altura del header */ }}>
+      <View className="mt-5" style={{ flex: 1 /* altura del header */ }}>
         <Slot />
       </View>
     </SafeAreaView>
