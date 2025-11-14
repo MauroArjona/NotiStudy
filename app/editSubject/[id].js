@@ -172,182 +172,193 @@ export default function EditSubject() {
   return (
     <View className="flex-1 bg-gray-100">
       <ScrollView className="pb-4 px-4">
-        <Text className="text-2xl font-bold text-center my-4">
-          Editar Materia
-        </Text>
+        <View className="mx-3">
+            <Text className="text-2xl font-bold text-center mb-4">
+            Editar Materia
+            </Text>
 
-        {/* Nombre */}
-        <Text className="font-semibold mb-1">Nombre de la materia</Text>
-        <TextInput
-          className="bg-white border border-gray-300 rounded-lg p-2 mb-4"
-          value={nombre}
-          onChangeText={setNombre}
-        />
-
-        {/* Color */}
-        <Text className="font-semibold mb-1">Color</Text>
-        <View style={styles.coloresContainer}>
-          {coloresDisponibles.map((color) => (
-            <TouchableOpacity
-              key={color}
-              style={[
-                styles.colorCircle,
-                { backgroundColor: color },
-                color === colorSeleccionado && styles.colorSeleccionado,
-              ]}
-              onPress={() => setColorSeleccionado(color)}
+            {/* Nombre */}
+            <Text className="font-semibold mb-1">Nombre de la materia</Text>
+            <TextInput
+            className="bg-white border border-gray-300 rounded-lg p-2 mb-4"
+            value={nombre}
+            onChangeText={setNombre}
             />
-          ))}
-        </View>
 
-        <Text className="text-sm mb-4">
-          Seleccionado:{" "}
-          <Text style={{ color: colorSeleccionado }}>{colorSeleccionado}</Text>
-        </Text>
+            {/* Color */}
+            <Text className="font-semibold mb-1">Color de la materia</Text>
+            <View style={styles.coloresContainer}>
+            {coloresDisponibles.map((color) => (
+                <TouchableOpacity
+                key={color}
+                style={[
+                    styles.colorCircle,
+                    { backgroundColor: color },
+                    color === colorSeleccionado && styles.colorSeleccionado,
+                ]}
+                onPress={() => setColorSeleccionado(color)}
+                />
+            ))}
+            </View>
 
-        {/* Estado */}
-        <Text className="font-semibold mb-1">Estado</Text>
-        <View className="bg-white border border-gray-300 rounded-lg mb-4">
-          <Picker selectedValue={estado} onValueChange={setEstado}>
-            <Picker.Item label="En Curso" value="En Curso" />
-            <Picker.Item label="Regularizada" value="Regularizada" />
-            <Picker.Item label="Aprobada" value="Aprobada" />
-          </Picker>
-        </View>
+            <Text className="text-sm mb-4">
+            Seleccionado:{" "}
+            <Text style={{ color: colorSeleccionado }}>{colorSeleccionado}</Text>
+            </Text>
 
-        {/* Horarios */}
-        <Text className="font-semibold mb-1">Horarios</Text>
+            {/* Estado */}
+            <Text className="font-semibold mb-1">Estado</Text>
+            <View className="bg-white border border-gray-300 rounded-lg mb-4 justify-center max-h-10">
+                <Picker selectedValue={estado} onValueChange={setEstado}>
+                    <Picker.Item label="En Curso" value="En Curso" />
+                    <Picker.Item label="Regularizada" value="Regularizada" />
+                    <Picker.Item label="Aprobada" value="Aprobada" />
+                </Picker>
+            </View>
 
-        <View className="bg-white border border-gray-300 rounded-lg p-3 mb-3">
+            {/* Horarios */}
+            <Text className="font-semibold mb-1">Horarios</Text>
 
-          {/* Día de la semana */}
-            <Text className="font-semibold mb-1">Nuevo horario</Text>
-            <View className="border border-gray-300 rounded-lg mb-2 max-h-10 justify-center overflow-hidden">
-            <Picker
-                selectedValue={nuevoHorario.dia}
-                onValueChange={(v) => setNuevoHorario({ ...nuevoHorario, dia: v })}
+            <View className="bg-white border border-gray-300 rounded-lg p-3 mb-3">
+
+            {/* Día de la semana */}
+                <Text className="font-semibold mb-1">Nuevo horario</Text>
+                <View className="border border-gray-300 rounded-lg mb-2 h-10 justify-center overflow-hidden">
+                <Picker
+                    selectedValue={nuevoHorario.dia}
+                    onValueChange={(v) => setNuevoHorario({ ...nuevoHorario, dia: v })}
+                >
+                    {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"].map((d) => (
+                    <Picker.Item key={d} label={d} value={d} />
+                    ))}
+                </Picker>
+                </View>
+
+            {/* Hora inicio */}
+            <TouchableOpacity
+                className="border border-gray-300 rounded-lg p-2 mb-2"
+                onPress={() => openTimePicker("horarioInicio")}
             >
-                {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"].map((d) => (
-                <Picker.Item key={d} label={d} value={d} />
-                ))}
+                <Text>{nuevoHorario.horarioInicio || "Hora de inicio"}</Text>
+            </TouchableOpacity>
+
+            {/* Hora fin */}
+            <TouchableOpacity
+                className="border border-gray-300 rounded-lg p-2 mb-2 h-10"
+                onPress={() => openTimePicker("horarioFin")}
+            >
+                <Text>{nuevoHorario.horarioFin || "Hora de fin"}</Text>
+            </TouchableOpacity>
+
+            {/* Tipo de clase */}
+            <Text className="font-semibold mb-1">Tipo de clase</Text>
+            <View className="border border-gray-300 rounded-lg mb-2 h-10 justify-center overflow-hidden">
+            <Picker
+                selectedValue={nuevoHorario.tipo}
+                onValueChange={(v) => setNuevoHorario({ ...nuevoHorario, tipo: v })}
+            >
+                <Picker.Item label="Teoría" value="Teoría" />
+                <Picker.Item label="Práctica" value="Práctica" />
             </Picker>
             </View>
 
-          {/* Hora inicio */}
-          <TouchableOpacity
-            className="border border-gray-300 rounded-lg p-2 mb-2"
-            onPress={() => openTimePicker("horarioInicio")}
-          >
-            <Text>{nuevoHorario.horarioInicio || "Hora de inicio"}</Text>
-          </TouchableOpacity>
+            {/* Ubicación */}
+            <Text className="font-semibold mb-1">Ubicación</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg p-2 mb-2 h-10"
+                placeholder="Ej: Lab. Ardenghi, Aula 110, Virtual"
+                value={nuevoHorario.aula}
+                onChangeText={(t) => setNuevoHorario({ ...nuevoHorario, aula: t })}
+            />
 
-          {/* Hora fin */}
-          <TouchableOpacity
-            className="border border-gray-300 rounded-lg p-2 mb-2"
-            onPress={() => openTimePicker("horarioFin")}
-          >
-            <Text>{nuevoHorario.horarioFin || "Hora de fin"}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+                className="bg-blue-600 rounded-lg py-2 items-center"
+                onPress={agregarHorarioNuevo}
+            >
+                <Text className="text-white font-semibold">+ Agregar horario</Text>
+            </TouchableOpacity>
+            </View>
 
-          {/* Tipo de clase */}
-        <Text className="font-semibold mb-1">Tipo de clase</Text>
-        <View className="border border-gray-300 rounded-lg mb-2 max-h-10 justify-center overflow-hidden">
-        <Picker
-            selectedValue={nuevoHorario.tipo}
-            onValueChange={(v) => setNuevoHorario({ ...nuevoHorario, tipo: v })}
-        >
-            <Picker.Item label="Teoría" value="Teoría" />
-            <Picker.Item label="Práctica" value="Práctica" />
-        </Picker>
-        </View>
-
-          {/* Ubicación */}
-          <Text className="font-semibold mb-1">Ubicación</Text>
-          <TextInput
-            className="border border-gray-300 rounded-lg p-2 mb-3"
-            placeholder="Ej: Aula 110, Lab X"
-            value={nuevoHorario.aula}
-            onChangeText={(t) => setNuevoHorario({ ...nuevoHorario, aula: t })}
-          />
-
-          <TouchableOpacity
-            className="bg-blue-600 rounded-lg py-2 items-center"
-            onPress={agregarHorarioNuevo}
-          >
-            <Text className="text-white font-semibold">+ Agregar horario</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Lista de horarios */}
-        {horarios.length > 0 && (
-          <View className="mb-4">
-            <Text className="font-semibold text-center mb-2">
-              Horarios agregados
-            </Text>
-
-            {horarios.map((h, i) => (
-              <View
-                key={i}
-                className="flex-row justify-between bg-gray-200 p-2 mb-2 rounded-lg"
-              >
-                <Text style={{ flex: 2, textAlign: "center" }}>{h.dia}</Text>
-                <Text style={{ flex: 2, textAlign: "center" }}>
-                  {h.horarioInicio} - {h.horarioFin}
+            {/* Lista de horarios */}
+            {horarios.length > 0 && (
+            <View className="mb-4">
+                <Text className="font-semibold text-center mb-2">
+                Horarios agregados
                 </Text>
-                <View style={{ flex: 3, alignItems: "center" }}>
-                  <Text>{h.tipo}</Text>
-                  <Text>{h.aula}</Text>
+
+                {horarios.map((h, index) => (
+                <View
+                    key={index}
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingVertical: 8,
+                        paddingHorizontal: 12,
+                        marginBottom: 6,
+                        backgroundColor: "#f3f4f6",
+                        borderRadius: 6,
+                        alignItems: "center",
+                    }}
+                    >
+                    <Text style={{ flex: 2, textAlign: "center" }}>{h.dia}</Text>
+                    <Text style={{ flex: 2, textAlign: "center" }}>
+                    {h.horarioInicio} - {h.horarioFin}
+                    </Text>
+                    <View style={{ flex: 3, alignItems: "center" }}>
+                    <Text>{h.tipo}</Text>
+                    <Text>{h.aula}</Text>
+                    </View>
+
+                    <TouchableOpacity
+                    onPress={() =>
+                        setHorarios(horarios.filter((_, idx) => idx !== i))
+                    }
+                    >
+                    <Text style={{ color: "red", fontWeight: "600" }}>
+                        Eliminar
+                    </Text>
+                    </TouchableOpacity>
                 </View>
+                ))}
+            </View>
+            )}
 
-                <TouchableOpacity
-                  onPress={() =>
-                    setHorarios(horarios.filter((_, idx) => idx !== i))
-                  }
-                >
-                  <Text style={{ color: "red", fontWeight: "600" }}>
-                    Eliminar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-        )}
+            {/* Comentario */}
+            <Text className="font-semibold mb-1">Comentario</Text>
+            <TextInput
+            className="bg-white border border-gray-300 rounded-lg p-2 mb-6"
+            value={comentario}
+            onChangeText={setComentario}
+            multiline
+            />
 
-        {/* Comentario */}
-        <Text className="font-semibold mb-1">Comentario</Text>
-        <TextInput
-          className="bg-white border border-gray-300 rounded-lg p-2 mb-6"
-          value={comentario}
-          onChangeText={setComentario}
-          multiline
-        />
+            {/* Botones */}
+            <View className="flex-row justify-between mb-10">
+            <TouchableOpacity
+                className="bg-gray-400 py-3 rounded-lg flex-1 mr-2 items-center"
+                onPress={() => router.back()}
+            >
+                <Text className="text-white font-semibold">Cancelar</Text>
+            </TouchableOpacity>
 
-        {/* Botones */}
-        <View className="flex-row justify-between mb-10">
-          <TouchableOpacity
-            className="bg-gray-400 py-3 rounded-lg flex-1 mr-2 items-center"
-            onPress={() => router.back()}
-          >
-            <Text className="text-white font-semibold">Cancelar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+                className="bg-blue-600 py-3 rounded-lg flex-1 ml-2 items-center"
+                onPress={guardarCambios}
+            >
+                <Text className="text-white font-semibold">Guardar cambios</Text>
+            </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity
-            className="bg-blue-600 py-3 rounded-lg flex-1 ml-2 items-center"
-            onPress={guardarCambios}
-          >
-            <Text className="text-white font-semibold">Guardar cambios</Text>
-          </TouchableOpacity>
+            {showPicker && (
+            <DateTimePicker
+                mode="time"
+                is24Hour
+                display="default"
+                value={new Date()}
+                onChange={onTimeChange}
+            />
+            )}
         </View>
-
-        {showPicker && (
-          <DateTimePicker
-            mode="time"
-            is24Hour
-            display="default"
-            value={new Date()}
-            onChange={onTimeChange}
-          />
-        )}
       </ScrollView>
     </View>
   );

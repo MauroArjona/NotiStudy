@@ -165,7 +165,7 @@ export default function AgregarMateria() {
         </View>
 
         <Text className="text-sm mt-2 mb-6 text-gray-600">
-          Color elegido: <Text style={{ color: colorSeleccionado }}>{colorSeleccionado}</Text>
+          Seleccionado: <Text style={{ color: colorSeleccionado }}>{colorSeleccionado}</Text>
         </Text>
 
         {/*Estado*/}
