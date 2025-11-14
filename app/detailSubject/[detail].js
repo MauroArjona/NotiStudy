@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { getEstadoMateria, getComentarioPorMateria } from '../../database/materias';
-import { getClasesMateria } from '../../database/clases';
+import { getClasesMateria, getClasesPorMateria } from '../../database/clases';
 import { getActividadesFiltradas } from '../../database/actividades';
 import {parseFecha} from '../../utils/formatDate';
 
@@ -39,7 +39,7 @@ export default function MateriaDetail() {
 
   const cargarClases = () => {
     try {
-      const clases = getClasesMateria(detail); 
+      const clases = getClasesPorMateria(detail); 
       console.log("Clases de la materia:", clases);
       setClases(clases);
     } catch (error) {
