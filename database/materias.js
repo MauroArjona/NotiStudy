@@ -56,3 +56,80 @@ export const getComentarioPorMateria = (nombreMateria) => {
   }
 };
 
+export const eliminarMateria = (idMateria) => {
+  try {
+    //Obtener todas las actividades de la materia
+    const actividades = db.getAllSync(
+      "SELECT * FROM actividades WHERE idMateria = ?;",
+      [idMateria]
+    );
+
+    //Borrar recordatorios de cada actividad
+    actividades.forEach(a => {
+      db.runSync(
+        "DELETE FROM recordatorios WHERE idActividad = ?;",
+        [a.idActividad]
+      );
+    });
+
+    //Borrar actividades
+    db.runSync(
+      "DELETE FROM actividades WHERE idMateria = ?;",
+      [idMateria]
+    );
+
+    //Borrar clases
+    db.runSync(
+      "DELETE FROM clases WHERE idMateria = ?;",
+      [idMateria]
+    );
+
+    //Borrar la materia
+    db.runSync(
+      "DELETE FROM materias WHERE idMateria = ?;",
+      [idMateria]
+    );
+
+    console.log(`Materia ${idMateria} y todas sus dependencias eliminadas ✅`);
+    return true;
+  } catch (error) {
+    console.error("Error eliminando materia y sus dependencias:", error);
+    return false;
+  }
+};
+
+
+//-------------------------------------------------------------------------
+export const mostrarMaterias = () => {
+  try {
+    const materias = db.getAllSync("SELECT * FROM materias;");
+    console.log("Materias actuales en la DB:", materias);
+    return materias;
+  } catch (error) {
+    console.error("Error mostrando materias:", error);
+  }
+};
+
+export const mostrarClases = (idMateria) => {
+  try {
+    const clases = db.getAllSync("SELECT * FROM clases WHERE idMateria = ?;", [idMateria]);
+    console.log(`Clases de la materia ${idMateria}:`, clases);
+    return clases;
+  } catch (error) {
+    console.error("Error mostrando clases:", error);
+  }
+};
+
+export const mostrarActividades = (idMateria) => {
+  try {
+    const actividades = db.getAllSync("SELECT * FROM actividades WHERE idMateria = ?;", [idMateria]);
+    console.log(`Actividades de la materia ${idMateria}:`, actividades);
+    actividades.forEach(a => {
+      const recs = db.getAllSync("SELECT * FROM recordatorios WHERE idActividad = ?;", [a.idActividad]);
+      console.log(`  Recordatorios de actividad ${a.idActividad}:`, recs);
+    });
+    return actividades;
+  } catch (error) {
+    console.error("Error mostrando actividades:", error);
+  }
+};

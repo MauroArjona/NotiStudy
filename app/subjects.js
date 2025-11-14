@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Pressable, Alert} from "react-native";
+import { GestureHandlerRootView, Swipeable, RectButton } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { getMaterias } from "../database/materias"; 
+import { getMaterias, eliminarMateria, mostrarMaterias, mostrarClases, mostrarActividades} from "../database/materias"; 
+
 
 export default function MisMaterias() {
   const [materiasEnCurso, setMateriasEnCurso] = useState([]);
@@ -32,75 +34,141 @@ export default function MisMaterias() {
     }
   };
 
-  // 🔹 Función reutilizable para renderizar materias
-  const renderMateria = (item) => (
-    <View
-      key={item.idMateria}
-      className="flex-row justify-between items-start border-b border-gray-200 last:border-0 py-2"
-    >
-      <Text
-        className="flex-1 font-medium text-gray-900 pr-3"
-        numberOfLines={2}
-        ellipsizeMode="tail"
-      >
-        {item.nombre}
-      </Text>
-
-      {/* 🔹 Botón Ver más */}
-      <TouchableOpacity
+  const renderRightActions = (item) => (
+    <View className="flex-row">
+      
+      <Pressable
         onPress={() =>
           router.push({
-            pathname: "/detailSubject/[detail]",
-            params: { detail: item.nombre },
+            pathname: "/editSubject/[id]",
+            params: { id: item.idMateria },
           })
         }
+        className="bg-blue-500 w-16 justify-center items-center rounded-l-xl"
       >
-        <Text className="text-blue-600 text-sm">Ver más</Text>
-      </TouchableOpacity>
+        <Ionicons name="pencil" size={20} color="white" />
+      </Pressable>
+
+      <Pressable
+        onPress={() => handleEliminarMateria(item.idMateria)}
+        className="bg-red-500 w-16 justify-center items-center rounded-r-xl"
+      >
+        <Ionicons name="trash" size={20} color="white" />
+      </Pressable>
+
     </View>
   );
 
-  return (
-    <View className="flex-1 bg-gray-100">
-      <View className="flex-1 px-5">
-        {/* Encabezado */}
-        <View className="flex-row items-center justify-between px-1 mb-6">
-          <Text className="text-2xl font-bold">Mis materias</Text>
-          <TouchableOpacity
-            className="bg-blue-600 p-2 rounded-full"
-            onPress={() => router.push("/addSubject")}
-          >
-            <Ionicons name="add" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
 
-        {/* En curso */}
-        <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
-          <Text className="text-lg font-semibold mb-3 text-gray-800">
-            En curso
-          </Text>
-          <FlatList
-            data={materiasEnCurso}
-            keyExtractor={(item) => item.idMateria.toString()}
-            renderItem={({ item }) => renderMateria(item)}
-          />
-        </View>
+  const handleEliminarMateria = (idMateria) => {
+    Alert.alert(
+      "Eliminar materia",
+      "¿Desea eliminar esta materia y su información asociada (clases, actividades, recordatorios)?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => {
+            try {
+              mostrarMaterias();
+              mostrarClases(idMateria);
+              mostrarActividades(idMateria);
 
-        {/* Regularizadas */}
-        <View className="bg-white rounded-2xl p-4 shadow-sm">
-          <Text className="text-lg font-semibold mb-3 text-gray-800">
-            Regularizadas
-          </Text>
-          <FlatList
-            data={materiasRegulares}
-            keyExtractor={(item) => item.idMateria.toString()}
-            renderItem={({ item }) => renderMateria(item)}
-          />
-        </View>
+              const ok = eliminarMateria(idMateria);
+
+              if (ok) {
+                cargarMateriasEnCurso();
+                cargarMateriasRegulares();
+                Alert.alert("Éxito", "Materia eliminada correctamente.");
+                mostrarMaterias();
+                mostrarClases(idMateria);
+                mostrarActividades(idMateria);
+              } else {
+                Alert.alert("Error", "No se pudo eliminar la materia.");
+              }
+            } catch (error) {
+              console.error("Error eliminando materia:", error);
+              Alert.alert("Error", "Ocurrió un problema al eliminar la materia.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  // 🔹 Función reutilizable para renderizar materias
+  const renderMateria = (item) => (
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
+      <View
+        key={item.idMateria}
+        className="flex-row justify-between items-start border-b border-gray-200 py-3 bg-white"
+      >
+        <Text
+          className="flex-1 font-medium text-gray-900 pr-3"
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {item.nombre}
+        </Text>
+
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/detailSubject/[detail]",
+              params: { detail: item.nombre },
+            })
+          }
+        >
+          <Text className="text-blue-600 text-sm">Ver más</Text>
+        </TouchableOpacity>
       </View>
+    </Swipeable>
+  );
 
-      {/* Barra inferior */}
-      <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
-    </View>
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View className="flex-1 bg-gray-100">
+        <View className="flex-1 px-5">
+          {/* Encabezado */}
+          <View className="flex-row items-center justify-between px-1 mb-6">
+            <Text className="text-2xl font-bold">Mis materias</Text>
+            <TouchableOpacity
+              className="bg-blue-600 p-2 rounded-full"
+              onPress={() => router.push("/addSubject")}
+            >
+              <Ionicons name="add" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+
+          {/* En curso */}
+          <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+            <Text className="text-lg font-semibold mb-3 text-gray-800">
+              En curso
+            </Text>
+            <FlatList
+              data={materiasEnCurso}
+              keyExtractor={(item) => item.idMateria.toString()}
+              renderItem={({ item }) => renderMateria(item)}
+            />
+          </View>
+
+          {/* Regularizadas */}
+          <View className="bg-white rounded-2xl p-4 shadow-sm">
+            <Text className="text-lg font-semibold mb-3 text-gray-800">
+              Regularizadas
+            </Text>
+            <FlatList
+              data={materiasRegulares}
+              keyExtractor={(item) => item.idMateria.toString()}
+              renderItem={({ item }) => renderMateria(item)}
+            />
+          </View>
+        </View>
+
+        {/* Barra inferior */}
+        <View className="absolute bottom-0 left-0 right-0 bg-blue-600 h-12" />
+      </View>
+  </GestureHandlerRootView>
   );
 }
