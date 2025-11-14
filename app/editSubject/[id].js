@@ -311,7 +311,7 @@ export default function EditSubject() {
 
                     <TouchableOpacity
                     onPress={() =>
-                        setHorarios(horarios.filter((_, idx) => idx !== i))
+                        setHorarios(horarios.filter((_, idx) => idx !== index))
                     }
                     >
                     <Text style={{ color: "red", fontWeight: "600" }}>
