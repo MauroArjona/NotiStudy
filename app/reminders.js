@@ -1,10 +1,10 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import {View,Text,ScrollView,Switch,TouchableOpacity,Alert,} from "react-native";
 import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import {getRecordatoriosProximos,actualizarEstadoRecordatorio,eliminarRecordatorio,} from "../database/recordatorios";
 import { Trash2 } from "lucide-react-native";
 import SuccessModal from "../components/SuccessModal";
+import { formatearFechaISO } from "../utils/formatDate";
 
 export default function Recordatorios() {
   const [recordatorios, setRecordatorios] = useState([]);
@@ -95,13 +95,13 @@ export default function Recordatorios() {
               {/* Materia */}
               <View className="border-t border-gray-200 my-1" />
               <Text className="text-gray-600 mb-1">
-                Materia: {rec.materia || "Sin materia"}
+                {rec.materia || "Sin materia"}
               </Text>
 
               {/* Fecha aviso */}
               <View className="border-t border-gray-200 my-1" />
               <Text className="text-gray-600 mb-1">
-                Notificar: {rec.fechaAviso} - {rec.horaAviso}
+                Notificar: { formatearFechaISO(rec.fechaAviso) } - {rec.horaAviso}
               </Text>
 
               {/* Fecha de vencimiento */}

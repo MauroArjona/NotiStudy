@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { getEstadoMateria, getComentarioPorMateria } from '../../database/materias';
-import { getClasesMateria, getClasesPorMateria } from '../../database/clases';
+import { getClasesPorMateria } from '../../database/clases';
 import { getActividadesFiltradas } from '../../database/actividades';
 import {parseFecha} from '../../utils/formatDate';
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -19,7 +19,7 @@ export default function AgregarActividad() {
   const [aula, setAula] = useState("");
   const [descripcionActividad, setDescripcionActividad] = useState("");
   const [recordarme, setRecordarme] = useState(false);
-  const [materias, setMaterias] = useState(getMaterias("En Curso"));
+  const [materias, setMaterias] = useState([]);
 
   // 🔹 DateTimePicker
   const [showPicker, setShowPicker] = useState(false);
@@ -32,6 +32,15 @@ export default function AgregarActividad() {
     setPickerType(type);
     setShowPicker(true);
   };
+
+  useEffect(() => {
+    try {
+      const data = getMaterias("En Curso");
+      setMaterias(data);
+    }catch(error) {
+      console.error("Error cargando selector de materias:", error);
+    }
+  }, []);
 
   // 🔹 Formatear fecha y hora
   const formatDate = (date) => {
@@ -160,9 +169,9 @@ export default function AgregarActividad() {
         <Text className="font-semibold mb-1">Materia</Text>
         <View className="bg-white border border-gray-300 rounded-lg mb-4 max-h-10 justify-center">
           <Picker selectedValue={idMateria} onValueChange={setIdMateria}>
-            <Picker.Item label="Seleccioná una materia" value="" />
+            <Picker.Item label="Selecciona una materia" value="" enabled={false} color="#000" style={{ fontSize: 15 }}/>
             {materias.map((m) => (
-              <Picker.Item key={m.idMateria} label={m.nombre} value={m.idMateria} />
+              <Picker.Item key={m.idMateria} label={m.nombre} value={m.idMateria} style={{ fontSize: 15 }}/>
             ))}
           </Picker>
         </View>

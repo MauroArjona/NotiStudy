@@ -135,7 +135,7 @@ export default function AgregarMateria() {
 
   return (
     <View className="flex-1 bg-gray-100">
-      <ScrollView className="pb-4 px-4">
+      <ScrollView className="pb-4 mb-10 px-4">
         <View className="mx-3">
         <Text className="text-2xl font-bold text-center mb-4">Agregar Materia</Text>
 

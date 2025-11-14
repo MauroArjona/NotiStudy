@@ -61,7 +61,7 @@ export const initDB = () => {
             );`
         );
     } catch{ console.error("Error creando la tabla recordatorios ❌", error); }
-
+    /*
     try{
         // Insertar materias iniciales si no existen 
         const resultMat = db.getFirstSync("SELECT COUNT(*) AS count FROM materias;"); 
@@ -106,7 +106,7 @@ export const initDB = () => {
             `);
         }
     } catch{ console.error("Error insertando actividades iniciales ❌", error); }
-
+*/
 };
 
 export default db;

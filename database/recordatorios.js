@@ -79,6 +79,7 @@ export const getRecordatoriosActivos = () => {
       WHERE r.activo = 1
       ORDER BY r.fechaAviso ASC;
     `);
+    console.log(recordatorios);
     return recordatorios;
   } catch (error) {
     console.error("Error al obtener recordatorios activos ❌", error);
