@@ -161,6 +161,11 @@ export default function MisMaterias() {
               data={materiasEnCurso}
               keyExtractor={(item) => item.idMateria.toString()}
               renderItem={({ item }) => renderMateria(item)}
+              ListEmptyComponent={() => (
+                <Text className="text-gray-400 text-center py-4">
+                  No hay materias en curso
+                </Text>
+              )}
             />
           </View>
 
@@ -173,6 +178,11 @@ export default function MisMaterias() {
               data={materiasRegulares}
               keyExtractor={(item) => item.idMateria.toString()}
               renderItem={({ item }) => renderMateria(item)}
+              ListEmptyComponent={() => (
+                <Text className="text-gray-400 text-center py-4">
+                  No hay materias regularizadas
+                </Text>
+              )}
             />
           </View>
         </View>
