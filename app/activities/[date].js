@@ -266,7 +266,21 @@ export default function DayActivities() {
                           <Text className="font-semibold text-base">
                             {a.descripcionActividad}
                           </Text>
-                          <Text className="text-gray-500 text-sm">{a.nombre}</Text>
+                          <View className="flex-row items-center mt-1">
+                            {/*círculo con color asociado a la materia*/}
+                            <View
+                              style={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 999,
+                                backgroundColor: a.color || "#000",
+                                marginRight: 6,
+                              }}
+                            />
+                            <Text className="text-gray-500 text-sm">
+                              {a.nombre}
+                            </Text>
+                          </View>
                         </View>
 
                         <View className="items-end flex-[0.3]">

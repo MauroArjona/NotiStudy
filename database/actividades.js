@@ -55,7 +55,7 @@ export const getActividadesFiltradas = (nombreMateria = "", fecha = "", descripc
     const fechaFormateada = fecha && fecha.trim() !== "" ? formatearFechaISO(fecha) : "";
     // Base de la consulta
     let query = `
-      SELECT a.*, m.nombre
+      SELECT a.*, m.nombre, m.color
       FROM actividades AS a
       INNER JOIN materias AS m ON a.idMateria = m.idMateria
     `;

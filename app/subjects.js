@@ -102,8 +102,19 @@ export default function MisMaterias() {
     <Swipeable renderRightActions={() => renderRightActions(item)}>
       <View
         key={item.idMateria}
-        className="flex-row justify-between items-start border-b border-gray-200 py-3 bg-white"
+        className="flex-row justify-between items-center border-b border-gray-200 py-3 bg-white"
       >
+        {/*círculo de color asociado a la materia*/}
+        <View
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: 999,
+            backgroundColor: item.color || "#000",
+            marginRight: 10,
+          }}
+        />
+
         <Text
           className="flex-1 font-medium text-gray-900 pr-3"
           numberOfLines={2}
