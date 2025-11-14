@@ -103,6 +103,7 @@ export default function MateriaDetail() {
                     <Text className="text-gray-700 font-semibold">
                       {c.horarioInicio} - {c.horarioFin}
                     </Text>
+                    <Text className="text-gray-500">{c.tipo}</Text>
                     <Text className="text-gray-500">{c.aula}</Text>
                   </View>
                 </View>

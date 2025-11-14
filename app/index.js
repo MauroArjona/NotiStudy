@@ -73,6 +73,7 @@ export default function HomeScreen() {
                           <Text className="text-gray-700">
                             {c.horarioInicio} - {c.horarioFin}
                           </Text>
+                          <Text className="text-gray-500">{c.tipo}</Text>
                           <Text className="text-gray-500">{c.aula}</Text>
                         </View>
                       </View>
