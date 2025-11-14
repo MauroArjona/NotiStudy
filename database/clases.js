@@ -79,3 +79,33 @@ export const getClasesPorMateria = (nombreMateria) => {
   }
 };
 
+export const getClasesByMateria = (idMateria) => {
+  try {
+    const query = `
+      SELECT *
+      FROM clases
+      WHERE idMateria = ?
+      ORDER BY 
+        CASE dia
+          WHEN 'Lunes' THEN 1
+          WHEN 'Martes' THEN 2
+          WHEN 'Miércoles' THEN 3
+          WHEN 'Jueves' THEN 4
+          WHEN 'Viernes' THEN 5
+          WHEN 'Sábado' THEN 6
+          ELSE 7
+        END,
+        horarioInicio
+    `;
+    return db.getAllSync(query, [idMateria]);
+  } catch (error) {
+    console.error("Error obteniendo clases por materia:", error);
+    return [];
+  }
+};
+
+export function eliminarClasesPorMateria(idMateria) {
+  const db = getDB();
+  db.exec("DELETE FROM clases WHERE idMateria = ?", [idMateria]);
+}
+

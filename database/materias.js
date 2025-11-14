@@ -12,6 +12,20 @@ export const getMaterias = (estado) => {
   }
 };
 
+export const getMateriaById = (idMateria) => {
+  try {
+    const query = `
+      SELECT *
+      FROM materias
+      WHERE idMateria = ?
+    `;
+    return db.getFirstSync(query, [idMateria]);
+  } catch (error) {
+    console.error("Error obteniendo materia por ID:", error);
+    return null;
+  }
+};
+
 export const getEstadoMateria = (materia) => {
   try {
     const rta = db.getFirstSync(
@@ -38,6 +52,21 @@ export const agregarMateria = (nombre, estado, color, comentario) => {
   }
 };
 
+export const actualizarMateria = (idMateria, nombre, estado, color, comentario) => {
+  try {
+    const query = `
+      UPDATE materias
+      SET nombre = ?, estado = ?, color = ?, comentario = ?
+      WHERE idMateria = ?
+    `;
+    db.runSync(query, [nombre, estado, color, comentario, idMateria]);
+    return true;
+  } catch (error) {
+    console.error("Error actualizando materia:", error);
+    return false;
+  }
+};
+
 export const getComentarioPorMateria = (nombreMateria) => {
   try {
     const rows = db.getAllSync(
@@ -53,6 +82,15 @@ export const getComentarioPorMateria = (nombreMateria) => {
   } catch (error) {
     console.error("Error al obtener comentario de la materia:", error);
     return null;
+  }
+};
+
+export const eliminarClasesPorMateria = (idMateria) => {
+  try {
+    const query = `DELETE FROM clases WHERE idMateria = ?`;
+    db.runSync(query, [idMateria]);
+  } catch (error) {
+    console.error("Error eliminando clases:", error);
   }
 };
 
