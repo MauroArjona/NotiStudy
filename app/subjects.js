@@ -9,11 +9,13 @@ import { getMaterias, eliminarMateria, mostrarMaterias, mostrarClases, mostrarAc
 export default function MisMaterias() {
   const [materiasEnCurso, setMateriasEnCurso] = useState([]);
   const [materiasRegulares, setMateriasRegulares] = useState([]);
+  const [materiasAprobadas, setMateriasAprobadas] = useState([]);
   const router = useRouter();
   
   useEffect(() => {
     cargarMateriasEnCurso();
     cargarMateriasRegulares();
+    cargarMateriasAprobadas();
   }, []);
 
   const cargarMateriasEnCurso = () => {
@@ -29,6 +31,15 @@ export default function MisMaterias() {
     try {
       const data = getMaterias('Regularizada');
       setMateriasRegulares(data);
+    } catch (error) {
+      console.error("Error cargando materias:", error);
+    }
+  };
+
+  const cargarMateriasAprobadas = () => {
+    try {
+      const data = getMaterias('Aprobada');
+      setMateriasAprobadas(data);
     } catch (error) {
       console.error("Error cargando materias:", error);
     }
@@ -170,7 +181,7 @@ export default function MisMaterias() {
           </View>
 
           {/* Regularizadas */}
-          <View className="bg-white rounded-2xl p-4 shadow-sm">
+          <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
             <Text className="text-lg font-semibold mb-3 text-gray-800">
               Regularizadas
             </Text>
@@ -181,6 +192,23 @@ export default function MisMaterias() {
               ListEmptyComponent={() => (
                 <Text className="text-gray-400 text-center py-4">
                   No hay materias regularizadas
+                </Text>
+              )}
+            />
+          </View>
+
+          {/* Aprobadas */}
+          <View className="bg-white rounded-2xl p-4 shadow-sm">
+            <Text className="text-lg font-semibold mb-3 text-gray-800">
+              Aprobadas
+            </Text>
+            <FlatList
+              data={materiasAprobadas}
+              keyExtractor={(item) => item.idMateria.toString()}
+              renderItem={({ item }) => renderMateria(item)}
+              ListEmptyComponent={() => (
+                <Text className="text-gray-400 text-center py-4">
+                  No hay materias aprobadas
                 </Text>
               )}
             />

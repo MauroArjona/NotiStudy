@@ -211,7 +211,7 @@ export default function DayActivities() {
                     return;
                   }
 
-                  if (selectedDate) {
+                  if (selectedDate) { 
                     const year = selectedDate.getFullYear();
                     const month = selectedDate.getMonth() + 1;
                     const day = selectedDate.getDate();

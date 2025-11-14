@@ -15,6 +15,7 @@ import {obtenerActividadPorId,actualizarActividad,} from "../database/actividade
 import {obtenerRecordatorioPorActividad,actualizarRecordatorio,} from "../database/recordatorios";
 import { getMaterias } from "../database/materias";
 import SuccessModal from "../components/SuccessModal";
+import { getStrFechaISO, parseFecha } from "../utils/formatDate";
 
 export default function EditarActividad() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function EditarActividad() {
       }
     
       setIdMateria(act.idMateria);
-      setFecha(act.fecha);
+      setFecha(getStrFechaISO(act.fecha));
       setHorario(act.horario);
       setAula(act.aula || "");
       setDescripcionActividad(act.descripcionActividad);
